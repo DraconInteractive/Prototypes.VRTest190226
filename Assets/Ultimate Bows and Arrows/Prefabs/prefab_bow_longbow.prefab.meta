@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 09b92b75004e02046b7db152eb3ecbc9
+labels:
+- Bow
+- Longbow
+- Ranged
+- Weapon
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133971
+  packageName: Ultimate Bows and Arrows Vol1.
+  packageVersion: 1.0
+  assetPath: Assets/Ultimate Bows and Arrows/Prefabs/prefab_bow_longbow.prefab
+  uploadId: 619438

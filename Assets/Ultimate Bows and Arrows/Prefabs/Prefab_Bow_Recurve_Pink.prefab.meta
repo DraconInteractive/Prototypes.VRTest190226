@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 8fd3575018e81f746b52da8f6bd612f9
+labels:
+- Bow
+- Ranged
+- Recurve
+- Weapon
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133971
+  packageName: Ultimate Bows and Arrows Vol1.
+  packageVersion: 1.0
+  assetPath: Assets/Ultimate Bows and Arrows/Prefabs/Prefab_Bow_Recurve_Pink.prefab
+  uploadId: 619438

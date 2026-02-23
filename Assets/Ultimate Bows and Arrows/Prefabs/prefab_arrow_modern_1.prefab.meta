@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 66d938895ec23334a8dadb506cbe11e1
+labels:
+- Arrow
+- Modern
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133971
+  packageName: Ultimate Bows and Arrows Vol1.
+  packageVersion: 1.0
+  assetPath: Assets/Ultimate Bows and Arrows/Prefabs/prefab_arrow_modern_1.prefab
+  uploadId: 619438

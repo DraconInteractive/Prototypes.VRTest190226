@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 29aac952982f8574591d373785ae6958
+labels:
+- Bow
+- Compound
+- Ranged
+- Weapon
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133971
+  packageName: Ultimate Bows and Arrows Vol1.
+  packageVersion: 1.0
+  assetPath: Assets/Ultimate Bows and Arrows/Prefabs/prefab_bow_Compound_Camouflage.prefab
+  uploadId: 619438
