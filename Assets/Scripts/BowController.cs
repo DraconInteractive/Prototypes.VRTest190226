@@ -5,31 +5,26 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BowController : MonoBehaviour
 {
-    public Transform BowRoot;
     public XRGrabInteractable BowInteractable;
     public XRPullInteractable NotchInteractable;
 
-    public float rotationSmoothing = 90;
+    public Arrow arrowPrefab;
 
-    public bool rotating = false;
-
-    private Quaternion lastRotation;
-    
-    private void LateUpdate()
+    private Arrow spawnedArrow;
+    private void OnEnable()
     {
-        rotating = BowInteractable.interactorsSelecting.Count > 0 && NotchInteractable.isPulling;
+        NotchInteractable.PullStarted += OnPullStart;
+    }
 
-        if (!rotating) return;
-        
-        var bowGripPos = BowInteractable.attachTransform.position;
-        var notchHandPos = NotchInteractable.handPos;
-            
-        var fireDir = (bowGripPos - notchHandPos).normalized;
-        var upDir = BowInteractable.interactorsSelecting[0].GetAttachTransform(BowInteractable).up;
-        Quaternion targetRot = Quaternion.LookRotation(fireDir, upDir);
+    private void OnDisable()
+    {
+        NotchInteractable.PullStarted -= OnPullStart;
+    }
 
-        BowRoot.rotation = Quaternion.Slerp(lastRotation, targetRot, rotationSmoothing * Time.deltaTime);
-
-        lastRotation = targetRot;
+    private void OnPullStart()
+    {
+        // TODO Set pos / rot from notch
+        spawnedArrow = Instantiate(arrowPrefab, NotchInteractable.NotchPoint) as Arrow;
+        spawnedArrow.Init(NotchInteractable, BowInteractable);
     }
 }

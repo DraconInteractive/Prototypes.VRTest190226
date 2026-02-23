@@ -14,7 +14,7 @@ public class XRPullInteractable : XRBaseInteractable
     [Header("Pull Settings")] 
     [SerializeField] private Transform _startPoint;
     [SerializeField] private Transform _endPoint;
-    [SerializeField] private Transform _notchPoint;
+    public Transform NotchPoint;
 
     public float pullAmount { get; private set; } = 0.0f;
     public Vector3 handPos { get; private set; }
@@ -36,12 +36,12 @@ public class XRPullInteractable : XRBaseInteractable
             Gizmos.color = Color.cyan;
             var iPos = _pullingInteractor.GetAttachTransform(this).position;
             Gizmos.DrawWireSphere(iPos, 0.05f);
-            Gizmos.DrawLine(iPos, _notchPoint.position);
+            Gizmos.DrawLine(iPos, NotchPoint.position);
         }
         else
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(_notchPoint.position, 0.05f);
+            Gizmos.DrawWireSphere(NotchPoint.position, 0.05f);
         }
     }
 
@@ -58,8 +58,7 @@ public class XRPullInteractable : XRBaseInteractable
         PullEnded?.Invoke();
         _pullingInteractor = null;
         pullAmount = 0f;
-        _notchPoint.transform.localPosition = new Vector3(_notchPoint.transform.localPosition.x,
-            _notchPoint.transform.localPosition.y, 0f);
+        NotchPoint.transform.localPosition = new Vector3(NotchPoint.transform.localPosition.x, NotchPoint.transform.localPosition.y, 0f);
         isPulling = false;
         UpdateStringAndNotch();
     }
@@ -107,7 +106,7 @@ public class XRPullInteractable : XRBaseInteractable
     private void UpdateStringAndNotch()
     {
         Vector3 linePosition = Vector3.Lerp(_startPoint.localPosition, _endPoint.localPosition, pullAmount);
-        _notchPoint.transform.localPosition = linePosition;
+        NotchPoint.transform.localPosition = linePosition;
         _lineRenderer.SetPosition(1, linePosition);
     }
 
