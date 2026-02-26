@@ -11,6 +11,8 @@ public class Arrow : MonoBehaviour
 
     public GameObject aimMarker;
     
+    public float markerSmoothing = 25f;
+
     public LayerMask physicsLayer;
     
     private XRPullInteractable _pullInteractable;
@@ -56,7 +58,10 @@ public class Arrow : MonoBehaviour
                 {
                     aimMarker.SetActive(true);
                 }
-                aimMarker.transform.position = hit.point;
+                aimMarker.transform.position = Vector3.Lerp(
+                    aimMarker.transform.position,
+                    hit.point,
+                    markerSmoothing * Time.fixedDeltaTime);
             }
             else if (aimMarker.activeSelf)
             {
