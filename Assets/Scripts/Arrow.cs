@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Arrow : MonoBehaviour
 {
+    public float aimFOV = 60;
+    
     public float fireSpeed = 10;
     public float lifeTime = 3;
     public float raycastDist = 0.5f;
     public float digLength = 0.05f;
 
+    public Transform arrowTip;
+    
     public GameObject aimMarker;
+
+    public GameObject targetRingUI;
+    public float targetRingOffset;
+    public LineRenderer targetLine;
     
     public float markerSmoothing = 25f;
 
@@ -20,6 +30,19 @@ public class Arrow : MonoBehaviour
 
     private bool _released;
     private bool _hit;
+
+    private float AimRange => fireSpeed * lifeTime * 1.15f;
+
+    private struct TargetData
+    {
+        public bool valid;
+        public float dot;
+        public Vector3 closestPoint;
+        public Vector3 releaseVector;
+    }
+
+    private Dictionary<Target, TargetData> targets = new();
+    private Target lastBestTarget;
     
     public void Init(XRPullInteractable pullInteractable, XRGrabInteractable bowInteractable)
     {
@@ -30,6 +53,9 @@ public class Arrow : MonoBehaviour
         
         aimMarker.transform.SetParent(null);
         aimMarker?.SetActive(false);
+
+        targetRingUI.transform.SetParent(null);
+        targetLine.transform.SetParent(null);
     }
 
     private void OnDestroy()
@@ -44,15 +70,56 @@ public class Arrow : MonoBehaviour
         {
             Destroy(aimMarker);
         }
+
+        if (targetRingUI != null)
+        {
+            Destroy(targetRingUI);
+        }
+
+        if (targetLine != null)
+        {
+            Destroy(targetLine.gameObject);
+        }
     }
 
     private void FixedUpdate()
     {
         if (!_released)
         {
-            // If valid target found in trajectory, show marker. Else hide.
+            UpdateTargets();
+
+            var best = TryGetBestTarget(out Target bestTarget, out TargetData bestTargetData);
+
+            if (lastBestTarget != best)
+            {
+                if (lastBestTarget != null)
+                {
+                    lastBestTarget.SetHighlight(false);
+                    targetRingUI.SetActive(false);
+                    targetLine.gameObject.SetActive(false);
+                }
+
+                lastBestTarget = bestTarget;
+                if (best)
+                {
+                    bestTarget.SetHighlight(true);
+                    targetRingUI.SetActive(true);
+                    targetLine.gameObject.SetActive(true);
+                }
+            }
+
+            if (best)
+            {
+                targetRingUI.transform.position = arrowTip.position + bestTargetData.releaseVector * targetRingOffset;
+                targetRingUI.transform.rotation = Quaternion.LookRotation(bestTargetData.releaseVector);
+                // TODO set target line positions here
+                // Start position is same calc as targetRingUI position, but * 1.1f so it sits slightly in front
+                // then bezier curve from start to bestTarget.closestPoint
+            }
+            
+            // Marker showing unmodified arrow trajectory
             var markerRay = new Ray(transform.position, transform.forward);
-            if (Physics.Raycast(markerRay, out var hit, (fireSpeed * lifeTime * 1.15f), physicsLayer.value))
+            if (Physics.Raycast(markerRay, out var hit, (AimRange), physicsLayer.value))
             {
                 if (!aimMarker.activeSelf)
                 {
@@ -129,5 +196,74 @@ public class Arrow : MonoBehaviour
         transform.SetParent(null);
         Destroy(gameObject, lifeTime);
         Destroy(aimMarker);
+        Destroy(targetRingUI);
+        Destroy(targetLine.gameObject);
+
+    }
+
+    private void UpdateTargets()
+    {
+        targets.Clear();
+        foreach (var target in Target.All)
+        {
+            var data = TryGetTargetData(target, out float dot, out Vector3 point, out Vector3 vector);
+            targets[target] = new TargetData()
+            {
+                valid = data,
+                dot = dot,
+                closestPoint = point,
+                releaseVector = vector
+            };
+        }
+    }
+
+    private bool TryGetBestTarget(out Target bestTarget, out TargetData bestData)
+    {
+        bestTarget = null;
+        bestData = default;
+
+        foreach (var kvp in targets)
+        {
+            if (!kvp.Value.valid) continue;
+            if (kvp.Value.dot > bestData.dot)
+            {
+                bestTarget = kvp.Key;
+                bestData = kvp.Value;
+            }
+        }
+
+        return bestTarget != null;
+    }
+
+
+    private bool TryGetTargetData(Target target, out float dot, out Vector3 closestPoint, out Vector3 releaseVector)
+    {
+        if (target.collider == null)
+        {
+            dot = 0;
+            closestPoint = Vector3.zero;
+            releaseVector = Vector3.zero;
+            return false;
+        }
+        
+        var ray = new Ray(transform.position, transform.forward);
+        if (target.collider.Raycast(ray, out var hit, AimRange))
+        {
+            closestPoint = hit.point;
+            releaseVector = transform.forward;
+        }
+        else
+        {
+            Vector3 toCenter = target.collider.bounds.center - transform.position;
+            float t = Mathf.Max(0f, Vector3.Dot(toCenter, transform.forward));
+            Vector3 pointOnRay = transform.position + transform.forward * t;
+            closestPoint = target.collider.ClosestPoint(pointOnRay);
+
+            releaseVector = (closestPoint - transform.position).normalized;
+        }
+        dot = Vector3.Dot(transform.forward, (closestPoint -
+                                              transform.position).normalized);
+        
+        return dot > Mathf.Cos(aimFOV * 0.5f * Mathf.Deg2Rad);
     }
 }
