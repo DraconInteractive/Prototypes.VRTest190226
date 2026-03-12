@@ -6,7 +6,12 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Arrow : MonoBehaviour
 {
+    [Tooltip("What is the FOV of the cone used to limit what targets can be assisted to?")]
     public float aimFOV = 60;
+    [Range(0,1), Tooltip("How much should the aim assist correct the trajectory of the arrow? 1 = 100% assist, 0.5 = 50% assist, 0 = no assist")]
+    public float aimAssist = 0.2f;
+    [Range(0,1), Tooltip("How far towards the centre of the object should the arrow target when assisting? 1 = direct centre, 0 = closest edge")]
+    public float centreAssist = 0.2f;
     
     public float fireSpeed = 10;
     public float lifeTime = 3;
@@ -16,10 +21,13 @@ public class Arrow : MonoBehaviour
     public Transform arrowTip;
     
     public GameObject aimMarker;
-
+    public float markerDownInitialOffset = 0.25f;
+    public float markerDownDistanceOffset = 0.05f;
+    
     public GameObject targetRingUI;
     public float targetRingOffset;
-    public LineRenderer targetLine;
+
+    public GameObject assistDebugObject;
     
     public float markerSmoothing = 25f;
 
@@ -31,6 +39,8 @@ public class Arrow : MonoBehaviour
     private bool _released;
     private bool _hit;
 
+    private Transform _camera;
+    
     private float AimRange => fireSpeed * lifeTime * 1.15f;
 
     private struct TargetData
@@ -55,7 +65,8 @@ public class Arrow : MonoBehaviour
         aimMarker?.SetActive(false);
 
         targetRingUI.transform.SetParent(null);
-        targetLine.transform.SetParent(null);
+        assistDebugObject.transform.SetParent(null);
+        _camera = Camera.main.transform;
     }
 
     private void OnDestroy()
@@ -76,9 +87,9 @@ public class Arrow : MonoBehaviour
             Destroy(targetRingUI);
         }
 
-        if (targetLine != null)
+        if (assistDebugObject != null)
         {
-            Destroy(targetLine.gameObject);
+            Destroy(assistDebugObject);
         }
     }
 
@@ -88,7 +99,7 @@ public class Arrow : MonoBehaviour
         {
             UpdateTargets();
 
-            var best = TryGetBestTarget(out Target bestTarget, out TargetData bestTargetData);
+            var best = TryGetBestTarget(out var bestTarget, out var bestTargetData);
 
             if (lastBestTarget != best)
             {
@@ -96,15 +107,16 @@ public class Arrow : MonoBehaviour
                 {
                     lastBestTarget.SetHighlight(false);
                     targetRingUI.SetActive(false);
-                    targetLine.gameObject.SetActive(false);
+                    assistDebugObject.SetActive(false);
                 }
 
                 lastBestTarget = bestTarget;
+                
                 if (best)
                 {
                     bestTarget.SetHighlight(true);
                     targetRingUI.SetActive(true);
-                    targetLine.gameObject.SetActive(true);
+                    assistDebugObject.SetActive(true);
                 }
             }
 
@@ -112,9 +124,12 @@ public class Arrow : MonoBehaviour
             {
                 targetRingUI.transform.position = arrowTip.position + bestTargetData.releaseVector * targetRingOffset;
                 targetRingUI.transform.rotation = Quaternion.LookRotation(bestTargetData.releaseVector);
-                // TODO set target line positions here
-                // Start position is same calc as targetRingUI position, but * 1.1f so it sits slightly in front
-                // then bezier curve from start to bestTarget.closestPoint
+
+                if (TryGetAssistedRotation(out var assistedRotation))
+                {
+                    assistDebugObject.transform.position = targetRingUI.transform.position;
+                    assistDebugObject.transform.rotation = assistedRotation;
+                }
             }
             
             // Marker showing unmodified arrow trajectory
@@ -125,10 +140,18 @@ public class Arrow : MonoBehaviour
                 {
                     aimMarker.SetActive(true);
                 }
+                
+                var down = markerDownInitialOffset +
+                           Vector3.Distance(hit.point, transform.position) * markerDownDistanceOffset;
+                
                 aimMarker.transform.position = Vector3.Lerp(
                     aimMarker.transform.position,
-                    hit.point,
+                    hit.point + Vector3.down * down,
                     markerSmoothing * Time.fixedDeltaTime);
+
+                // Point marker at camera
+                aimMarker.transform.rotation =
+                    Quaternion.LookRotation((_camera.transform.position - aimMarker.transform.position).normalized); 
             }
             else if (aimMarker.activeSelf)
             {
@@ -159,7 +182,6 @@ public class Arrow : MonoBehaviour
                 _hit = true;
             }
         }
-        
     }
 
     private void OnDrawGizmos()
@@ -194,11 +216,17 @@ public class Arrow : MonoBehaviour
         _pullInteractable.PullActionReleased -= OnRelease;
 
         transform.SetParent(null);
+
+        if (lastBestTarget != null)
+        {
+            if (TryGetAssistedRotation(out var assistedRotation))
+            {
+                transform.rotation = assistedRotation;
+            }
+        }
         Destroy(gameObject, lifeTime);
         Destroy(aimMarker);
         Destroy(targetRingUI);
-        Destroy(targetLine.gameObject);
-
     }
 
     private void UpdateTargets()
@@ -206,17 +234,23 @@ public class Arrow : MonoBehaviour
         targets.Clear();
         foreach (var target in Target.All)
         {
-            var data = TryGetTargetData(target, out float dot, out Vector3 point, out Vector3 vector);
-            targets[target] = new TargetData()
-            {
-                valid = data,
-                dot = dot,
-                closestPoint = point,
-                releaseVector = vector
-            };
+            TryGetTargetData(target, out var data);
+            targets[target] = data;
         }
     }
 
+    private bool TryGetAssistedRotation(out Quaternion assistedRotation)
+    {
+        if (lastBestTarget == null || !targets.ContainsKey(lastBestTarget) || !targets[lastBestTarget].valid)
+        {
+            assistedRotation = Quaternion.identity;
+            return false;
+        }
+        var targetRot = Quaternion.LookRotation(targets[lastBestTarget].releaseVector);
+        assistedRotation = Quaternion.Slerp(transform.rotation, targetRot, aimAssist);
+        return true;
+    }
+    
     private bool TryGetBestTarget(out Target bestTarget, out TargetData bestData)
     {
         bestTarget = null;
@@ -235,7 +269,29 @@ public class Arrow : MonoBehaviour
         return bestTarget != null;
     }
 
-
+    private bool TryGetTargetData(Target target, out TargetData data)
+    {
+        if (TryGetTargetData(target, out var dot, out var closest, out var vector))
+        {
+            data = new TargetData()
+            {
+                closestPoint = closest,
+                dot = dot,
+                valid = true,
+                releaseVector = vector
+            };
+            return true;
+        }
+        else
+        {
+            data = new TargetData()
+            {
+                valid = false
+            };
+            return false;
+        }
+    }
+    
     private bool TryGetTargetData(Target target, out float dot, out Vector3 closestPoint, out Vector3 releaseVector)
     {
         if (target.collider == null)
@@ -254,12 +310,14 @@ public class Arrow : MonoBehaviour
         }
         else
         {
-            Vector3 toCenter = target.collider.bounds.center - transform.position;
-            float t = Mathf.Max(0f, Vector3.Dot(toCenter, transform.forward));
-            Vector3 pointOnRay = transform.position + transform.forward * t;
+            var toCenter = target.collider.bounds.center - transform.position;
+            var t = Mathf.Max(0f, Vector3.Dot(toCenter, transform.forward));
+            var pointOnRay = transform.position + transform.forward * t;
             closestPoint = target.collider.ClosestPoint(pointOnRay);
 
-            releaseVector = (closestPoint - transform.position).normalized;
+            var edgeVector = (closestPoint - transform.position).normalized;
+
+            releaseVector = Vector3.Lerp(edgeVector, toCenter, centreAssist);
         }
         dot = Vector3.Dot(transform.forward, (closestPoint -
                                               transform.position).normalized);
