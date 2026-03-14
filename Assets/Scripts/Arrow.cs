@@ -53,6 +53,8 @@ public class Arrow : MonoBehaviour
 
     private Dictionary<Target, TargetData> targets = new();
     private Target lastBestTarget;
+
+    private Vector3 lastPhysicsPosition;
     
     public void Init(XRPullInteractable pullInteractable, XRGrabInteractable bowInteractable)
     {
@@ -62,10 +64,14 @@ public class Arrow : MonoBehaviour
         _pullInteractable.PullActionReleased += OnRelease;
         
         aimMarker.transform.SetParent(null);
-        aimMarker?.SetActive(false);
-
+        aimMarker.SetActive(false);
+        
         targetRingUI.transform.SetParent(null);
+        targetRingUI.SetActive(false);
+        
         assistDebugObject.transform.SetParent(null);
+        assistDebugObject.SetActive(false);
+        
         _camera = Camera.main.transform;
     }
 
@@ -93,97 +99,116 @@ public class Arrow : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (_released && !_hit)
+        {
+            FlightUpdate();
+        }
+    }
+
     private void FixedUpdate()
     {
         if (!_released)
         {
-            UpdateTargets();
-
-            var best = TryGetBestTarget(out var bestTarget, out var bestTargetData);
-
-            if (lastBestTarget != best)
-            {
-                if (lastBestTarget != null)
-                {
-                    lastBestTarget.SetHighlight(false);
-                    targetRingUI.SetActive(false);
-                    assistDebugObject.SetActive(false);
-                }
-
-                lastBestTarget = bestTarget;
-                
-                if (best)
-                {
-                    bestTarget.SetHighlight(true);
-                    targetRingUI.SetActive(true);
-                    assistDebugObject.SetActive(true);
-                }
-            }
-
-            if (best)
-            {
-                targetRingUI.transform.position = arrowTip.position + bestTargetData.releaseVector * targetRingOffset;
-                targetRingUI.transform.rotation = Quaternion.LookRotation(bestTargetData.releaseVector);
-
-                if (TryGetAssistedRotation(out var assistedRotation))
-                {
-                    assistDebugObject.transform.position = targetRingUI.transform.position;
-                    assistDebugObject.transform.rotation = assistedRotation;
-                }
-            }
-            
-            // Marker showing unmodified arrow trajectory
-            var markerRay = new Ray(transform.position, transform.forward);
-            if (Physics.Raycast(markerRay, out var hit, (AimRange), physicsLayer.value))
-            {
-                if (!aimMarker.activeSelf)
-                {
-                    aimMarker.SetActive(true);
-                }
-                
-                var down = markerDownInitialOffset +
-                           Vector3.Distance(hit.point, transform.position) * markerDownDistanceOffset;
-                
-                aimMarker.transform.position = Vector3.Lerp(
-                    aimMarker.transform.position,
-                    hit.point + Vector3.down * down,
-                    markerSmoothing * Time.fixedDeltaTime);
-
-                // Point marker at camera
-                aimMarker.transform.rotation =
-                    Quaternion.LookRotation((_camera.transform.position - aimMarker.transform.position).normalized); 
-            }
-            else if (aimMarker.activeSelf)
-            {
-                aimMarker.SetActive(false);
-            }
+            PullFixedUpdate();
             return;
         }
 
         
         if (!_hit)
         {
-            // TODO: Separate physics and render / 'true' position
-            // So in fixed update update the 'physics' position. This is used for collisions etc
-            // In normal update, move the arrows actual body towards the physics position smoothly
-            // If we want, we can even move the arrow slightly forward of the current physics position (if we wanted predictive rendering). Not required for now
-            
-            Vector3 startPos = transform.position;
-            float stepDist = fireSpeed * Time.fixedDeltaTime;
-
-            transform.position += transform.forward * stepDist;
-            
-            // Using cached pos so that it checks along the move trajectory already covered, not just distance in front of the arrow
-            // If the item hit is in front of the arrow it will jump forward, forcing the contact instead of receiving it
-            var ray = new Ray(startPos, transform.forward);
-            if (Physics.Raycast(ray, out var hit, stepDist + raycastDist, physicsLayer.value))
-            {
-                transform.position += transform.forward * digLength;
-                _hit = true;
-            }
+            FlightFixedUpdate();
         }
     }
 
+    private void PullFixedUpdate()
+    {
+        UpdateTargets();
+
+        var foundBest = TryGetBestTarget(out var bestTarget, out var bestTargetData);
+
+        if (lastBestTarget != bestTarget)
+        {
+            if (lastBestTarget != null)
+            {
+                lastBestTarget.SetHighlight(false);
+                targetRingUI.SetActive(false);
+                assistDebugObject.SetActive(false);
+            }
+
+            lastBestTarget = bestTarget;
+            
+            if (foundBest)
+            {
+                bestTarget.SetHighlight(true);
+                targetRingUI.SetActive(true);
+                assistDebugObject.SetActive(true);
+            }
+        }
+
+        if (foundBest)
+        {
+            targetRingUI.transform.position = arrowTip.position + bestTargetData.releaseVector * targetRingOffset;
+            targetRingUI.transform.rotation = Quaternion.LookRotation(bestTargetData.releaseVector);
+
+            if (TryGetAssistedRotation(out var assistedRotation))
+            {
+                assistDebugObject.transform.position = targetRingUI.transform.position;
+                assistDebugObject.transform.rotation = assistedRotation;
+            }
+        }
+        
+        // Marker showing unmodified arrow trajectory
+        var markerRay = new Ray(transform.position, transform.forward);
+        if (Physics.Raycast(markerRay, out var hit, (AimRange), physicsLayer.value))
+        {
+            if (!aimMarker.activeSelf)
+            {
+                aimMarker.SetActive(true);
+            }
+            
+            var down = markerDownInitialOffset +
+                       Vector3.Distance(hit.point, transform.position) * markerDownDistanceOffset;
+            
+            aimMarker.transform.position = Vector3.Lerp(
+                aimMarker.transform.position,
+                hit.point + Vector3.down * down,
+                markerSmoothing * Time.fixedDeltaTime);
+
+            // Point marker at camera
+            aimMarker.transform.rotation =
+                Quaternion.LookRotation((_camera.position - aimMarker.transform.position).normalized); 
+        }
+        else if (aimMarker.activeSelf)
+        {
+            aimMarker.SetActive(false);
+        }
+
+        // No race condition with FlightFixedUpate since the methods are never run sequentially
+        lastPhysicsPosition = transform.position;
+    }
+
+    private void FlightUpdate()
+    {
+        transform.position += transform.forward * fireSpeed * Time.deltaTime;
+    }
+    
+    private void FlightFixedUpdate()
+    {
+        // Check space between where we were last physics update, and where we are now
+        var stepDist = (transform.position - lastPhysicsPosition).magnitude;
+        
+        var ray = new Ray(lastPhysicsPosition, transform.forward);
+        if (Physics.Raycast(ray, out var hit, stepDist + raycastDist, physicsLayer.value))
+        {
+            transform.position += transform.forward * digLength;
+            _hit = true;
+        }
+        
+        lastPhysicsPosition = transform.position;
+    }
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -227,6 +252,7 @@ public class Arrow : MonoBehaviour
         Destroy(gameObject, lifeTime);
         Destroy(aimMarker);
         Destroy(targetRingUI);
+        Destroy(assistDebugObject);
     }
 
     private void UpdateTargets()
@@ -241,12 +267,12 @@ public class Arrow : MonoBehaviour
 
     private bool TryGetAssistedRotation(out Quaternion assistedRotation)
     {
-        if (lastBestTarget == null || !targets.ContainsKey(lastBestTarget) || !targets[lastBestTarget].valid)
+        if (lastBestTarget == null || !targets.TryGetValue(lastBestTarget, out var data) || !data.valid)
         {
             assistedRotation = Quaternion.identity;
             return false;
         }
-        var targetRot = Quaternion.LookRotation(targets[lastBestTarget].releaseVector);
+        var targetRot = Quaternion.LookRotation(data.releaseVector);
         assistedRotation = Quaternion.Slerp(transform.rotation, targetRot, aimAssist);
         return true;
     }
@@ -317,7 +343,9 @@ public class Arrow : MonoBehaviour
 
             var edgeVector = (closestPoint - transform.position).normalized;
 
-            releaseVector = Vector3.Lerp(edgeVector, toCenter, centreAssist);
+            // Testing spherical lerp to maintain a normalized vector as directions diverge
+            //releaseVector = Vector3.Lerp(edgeVector, toCenter.normalized, centreAssist);
+            releaseVector = Vector3.Slerp(edgeVector, toCenter.normalized, centreAssist);
         }
         dot = Vector3.Dot(transform.forward, (closestPoint -
                                               transform.position).normalized);
