@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Transformers.Markers;
 
 public class Arrow : MonoBehaviour
 {
+    // Public
+    [Header("Core")]
     [Tooltip("What is the FOV of the cone used to limit what targets can be assisted to?")]
     public float aimFOV = 60;
     [Range(0,1), Tooltip("How much should the aim assist correct the trajectory of the arrow? 1 = 100% assist, 0.5 = 50% assist, 0 = no assist")]
@@ -19,30 +24,26 @@ public class Arrow : MonoBehaviour
     public float digLength = 0.05f;
 
     public Transform arrowTip;
-    
-    public GameObject aimMarker;
-    public float markerDownInitialOffset = 0.25f;
-    public float markerDownDistanceOffset = 0.05f;
-    
-    public GameObject targetRingUI;
-    public float targetRingOffset;
 
-    public GameObject assistDebugObject;
+    public List<ArrowDebug_Core> debugObjects;
     
-    public float markerSmoothing = 25f;
 
     public LayerMask physicsLayer;
+    
+    // Private
     
     private XRPullInteractable _pullInteractable;
     private XRGrabInteractable _bowInteractable;
 
     private bool _released;
     private bool _hit;
+    private Vector3 lastPhysicsPosition;
+    
+    public float AimRange => fireSpeed * lifeTime * 1.15f;
 
     private Transform _camera;
     
-    private float AimRange => fireSpeed * lifeTime * 1.15f;
-
+    // Target management
     private struct TargetData
     {
         public bool valid;
@@ -50,12 +51,21 @@ public class Arrow : MonoBehaviour
         public Vector3 closestPoint;
         public Vector3 releaseVector;
     }
-
-    private Dictionary<Target, TargetData> targets = new();
-    private Target lastBestTarget;
-
-    private Vector3 lastPhysicsPosition;
     
+    private Dictionary<Target, TargetData> targets = new();
+    
+    [ReadOnly]
+    public Target CurrentTarget;
+    
+    public struct AimData
+    {
+        public bool valid;
+        public Vector3 arrowVector;
+        public Quaternion adjustedAssistRotation;
+        public Quaternion fullAssistRotation;
+    }
+    
+    // Lifetime
     public void Init(XRPullInteractable pullInteractable, XRGrabInteractable bowInteractable)
     {
         _pullInteractable = pullInteractable;
@@ -63,16 +73,12 @@ public class Arrow : MonoBehaviour
         _pullInteractable.PullUpdated += OnPullUpdated;
         _pullInteractable.PullActionReleased += OnRelease;
         
-        aimMarker.transform.SetParent(null);
-        aimMarker.SetActive(false);
-        
-        targetRingUI.transform.SetParent(null);
-        targetRingUI.SetActive(false);
-        
-        assistDebugObject.transform.SetParent(null);
-        assistDebugObject.SetActive(false);
-        
         _camera = Camera.main.transform;
+
+        foreach (var obj in debugObjects)
+        {
+            obj.Init(this);
+        }
     }
 
     private void OnDestroy()
@@ -83,22 +89,13 @@ public class Arrow : MonoBehaviour
             _pullInteractable.PullActionReleased -= OnRelease;
         }
 
-        if (aimMarker != null)
+        foreach (var obj in debugObjects)
         {
-            Destroy(aimMarker);
-        }
-
-        if (targetRingUI != null)
-        {
-            Destroy(targetRingUI);
-        }
-
-        if (assistDebugObject != null)
-        {
-            Destroy(assistDebugObject);
+            obj?.OnArrowDestroyed();
         }
     }
 
+    // Updates
     private void Update()
     {
         if (_released && !_hit)
@@ -125,66 +122,31 @@ public class Arrow : MonoBehaviour
     private void PullFixedUpdate()
     {
         UpdateTargets();
-
-        var foundBest = TryGetBestTarget(out var bestTarget, out var bestTargetData);
-
-        if (lastBestTarget != bestTarget)
+        
+        var foundValidTarget = TryGetBestTarget(out var bestTarget, out var bestTargetData);
+        
+        if (CurrentTarget != bestTarget)
         {
-            if (lastBestTarget != null)
-            {
-                lastBestTarget.SetHighlight(false);
-                targetRingUI.SetActive(false);
-                assistDebugObject.SetActive(false);
-            }
-
-            lastBestTarget = bestTarget;
-            
-            if (foundBest)
-            {
-                bestTarget.SetHighlight(true);
-                targetRingUI.SetActive(true);
-                assistDebugObject.SetActive(true);
-            }
+            CurrentTarget?.SetHighlight(false);
+            CurrentTarget = bestTarget;
+            CurrentTarget?.SetHighlight(true);
         }
 
-        if (foundBest)
-        {
-            targetRingUI.transform.position = arrowTip.position + bestTargetData.releaseVector * targetRingOffset;
-            targetRingUI.transform.rotation = Quaternion.LookRotation(bestTargetData.releaseVector);
+        TryGetAssistedRotation(out var adjustedAssistRotation, out var fullAssistRotation);
 
-            if (TryGetAssistedRotation(out var assistedRotation))
-            {
-                assistDebugObject.transform.position = targetRingUI.transform.position;
-                assistDebugObject.transform.rotation = assistedRotation;
-            }
+        AimData aimData = new AimData()
+        {
+            valid = foundValidTarget,
+            arrowVector = transform.forward,
+            adjustedAssistRotation = adjustedAssistRotation,
+            fullAssistRotation = fullAssistRotation
+        };
+
+        foreach (var obj in debugObjects)
+        {
+            obj.OnAimUpdate(aimData);
         }
         
-        // Marker showing unmodified arrow trajectory
-        var markerRay = new Ray(transform.position, transform.forward);
-        if (Physics.Raycast(markerRay, out var hit, (AimRange), physicsLayer.value))
-        {
-            if (!aimMarker.activeSelf)
-            {
-                aimMarker.SetActive(true);
-            }
-            
-            var down = markerDownInitialOffset +
-                       Vector3.Distance(hit.point, transform.position) * markerDownDistanceOffset;
-            
-            aimMarker.transform.position = Vector3.Lerp(
-                aimMarker.transform.position,
-                hit.point + Vector3.down * down,
-                markerSmoothing * Time.fixedDeltaTime);
-
-            // Point marker at camera
-            aimMarker.transform.rotation =
-                Quaternion.LookRotation((_camera.position - aimMarker.transform.position).normalized); 
-        }
-        else if (aimMarker.activeSelf)
-        {
-            aimMarker.SetActive(false);
-        }
-
         // No race condition with FlightFixedUpate since the methods are never run sequentially
         lastPhysicsPosition = transform.position;
     }
@@ -202,8 +164,7 @@ public class Arrow : MonoBehaviour
         var ray = new Ray(lastPhysicsPosition, transform.forward);
         if (Physics.Raycast(ray, out var hit, stepDist + raycastDist, physicsLayer.value))
         {
-            transform.position += transform.forward * digLength;
-            _hit = true;
+            OnHit();
         }
         
         lastPhysicsPosition = transform.position;
@@ -218,6 +179,7 @@ public class Arrow : MonoBehaviour
         Gizmos.DrawLine(rToPoint, rToPoint + transform.forward * digLength);
     }
 
+    // Events
     private void OnPullUpdated(float obj)
     {
         // Get direction (and possible target)
@@ -242,19 +204,34 @@ public class Arrow : MonoBehaviour
 
         transform.SetParent(null);
 
-        if (lastBestTarget != null)
+        if (CurrentTarget != null)
         {
-            if (TryGetAssistedRotation(out var assistedRotation))
+            if (TryGetAssistedRotation(out var adjustedAssistRotation, out var fullAssistRotation))
             {
-                transform.rotation = assistedRotation;
+                transform.rotation = adjustedAssistRotation;
             }
+            CurrentTarget.SetHighlight(false);
         }
+        
         Destroy(gameObject, lifeTime);
-        Destroy(aimMarker);
-        Destroy(targetRingUI);
-        Destroy(assistDebugObject);
+        
+        foreach (var obj in debugObjects)
+        {
+            obj?.OnRelease();
+        }
     }
 
+    private void OnHit()
+    {
+        transform.position += transform.forward * digLength;
+        _hit = true;
+        
+        foreach (var obj in debugObjects)
+        {
+            obj.OnHit();
+        }
+    }
+    
     private void UpdateTargets()
     {
         targets.Clear();
@@ -265,15 +242,18 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    private bool TryGetAssistedRotation(out Quaternion assistedRotation)
+    // Helpers
+    private bool TryGetAssistedRotation(out Quaternion adjustedAssistRotation, out Quaternion fullAssistRotation)
     {
-        if (lastBestTarget == null || !targets.TryGetValue(lastBestTarget, out var data) || !data.valid)
+        if (CurrentTarget == null || !targets.TryGetValue(CurrentTarget, out var data) || !data.valid)
         {
-            assistedRotation = Quaternion.identity;
+            adjustedAssistRotation = Quaternion.identity;
+            fullAssistRotation = Quaternion.identity;
             return false;
         }
         var targetRot = Quaternion.LookRotation(data.releaseVector);
-        assistedRotation = Quaternion.Slerp(transform.rotation, targetRot, aimAssist);
+        adjustedAssistRotation = Quaternion.Slerp(transform.rotation, targetRot, aimAssist);
+        fullAssistRotation = targetRot;
         return true;
     }
     

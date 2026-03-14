@@ -858,7 +858,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1777192054801401317}
   m_Layer: 0
-  m_Name: Assist Marker
+  m_Name: Adjusted Assist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1029,6 +1029,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4766356203845417108}
   - component: {fileID: 1688250292402292086}
+  - component: {fileID: 8588986382197680177}
+  - component: {fileID: 8917550056933643020}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -1071,23 +1073,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Arrow
   aimFOV: 60
-  aimAssist: 1
-  centreAssist: 0.2
+  aimAssist: 0.75
+  centreAssist: 0.4
   fireSpeed: 45
   lifeTime: 3
   raycastDist: 0.96
   digLength: 0.05
   arrowTip: {fileID: 8180095947083777019}
-  aimMarker: {fileID: 7862755374351593700}
-  markerDownInitialOffset: 0.25
-  markerDownDistanceOffset: 0.05
-  targetRingUI: {fileID: 6331632084963819116}
-  targetRingOffset: 0.4
-  assistDebugObject: {fileID: 4698086388761209206}
-  markerSmoothing: 25
+  debugObjects:
+  - {fileID: 8588986382197680177}
+  - {fileID: 8917550056933643020}
   physicsLayer:
     serializedVersion: 2
-    m_Bits: 19
+    m_Bits: 17
+  CurrentTarget: {fileID: 0}
+--- !u!114 &8588986382197680177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733490217884561206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3037223d6b043638ce3e2c13213ce65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityEngine.XR.Interaction.Toolkit.Transformers.Markers.ArrowDebug_Assist
+  fullAssistObject: {fileID: 6331632084963819116}
+  adjustedAssistObject: {fileID: 4698086388761209206}
+  ringOffset: 0
+  adjustedRingAdditionalOffset: 0.05
+--- !u!114 &8917550056933643020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733490217884561206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f297faacfdf549c29b5d6e5f6baebeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityEngine.XR.Interaction.Toolkit.Transformers.Markers.ArrowDebug_Point
+  markerObject: {fileID: 7862755374351593700}
+  markerSmoothing: 25
 --- !u!1 &5968551906892702563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,7 +1269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7326453339358431339}
   m_Layer: 0
-  m_Name: Ring Marker
+  m_Name: Full Assist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
