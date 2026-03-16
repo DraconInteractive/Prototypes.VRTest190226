@@ -59,7 +59,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Transformers.Markers
             Cleanup();
         }
 
-        public override void OnHit()
+        public override void OnHit(Target target)
         {
             
         }

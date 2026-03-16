@@ -6,17 +6,10 @@ using UnityEngine.Events;
 public class Target : MonoBehaviour
 {
     public static List<Target> All = new();
-
-    public Collider collider;
-
+    
     public UnityEvent<bool> OnSetHighlight;
-    private void Awake()
-    {
-        if (collider == null)
-        {
-            collider = GetComponentInChildren<Collider>();
-        }
-    }
+    
+    public UnityEvent<Arrow> OnHit;
 
     private void OnEnable()
     {
@@ -31,5 +24,10 @@ public class Target : MonoBehaviour
     public void SetHighlight(bool active)
     {
         OnSetHighlight?.Invoke(active);
+    }
+
+    public void Hit(Arrow arrow)
+    {
+        OnHit.Invoke(arrow);
     }
 }

@@ -15,7 +15,7 @@
 
         public abstract void OnRelease();
 
-        public abstract void OnHit();
+        public abstract void OnHit(Target target);
 
         public abstract void OnArrowDestroyed();
     }

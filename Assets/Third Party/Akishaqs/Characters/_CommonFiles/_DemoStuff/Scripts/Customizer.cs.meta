@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f7038c642c4490a43a4aa1b7870a98bb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174093
+  packageName: Hitmen | Lowpoly Characters
+  packageVersion: 1.0
+  assetPath: Assets/Akishaqs/Characters/_CommonFiles/_DemoStuff/Scripts/Customizer.cs
+  uploadId: 378675

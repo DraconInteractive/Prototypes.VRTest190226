@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 47ef30010db03a049af8f885650d72d9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174093
+  packageName: Hitmen | Lowpoly Characters
+  packageVersion: 1.0
+  assetPath: Assets/Akishaqs/Characters/_CommonFiles/_DemoStuff/Scripts/CameraController.cs
+  uploadId: 378675
