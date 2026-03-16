@@ -15,14 +15,18 @@ public class Arrow : MonoBehaviour
     public float aimFOV = 60;
     [Range(0,1), Tooltip("How much should the aim assist correct the trajectory of the arrow? 1 = 100% assist, 0.5 = 50% assist, 0 = no assist")]
     public float aimAssist = 0.2f;
-    [Range(0,1), Tooltip("How far towards the centre of the object should the arrow target when assisting? 1 = direct centre, 0 = closest edge")]
-    public float centreAssist = 0.2f;
     
+    [Space]
     public float fireSpeed = 10;
     public float lifeTime = 3;
     public float raycastDist = 0.5f;
     public float digLength = 0.05f;
+    public float forceMultiplier = 1;
 
+    [Space]
+    public float baseDamage = 10;
+    
+    [Space]
     public Transform arrowTip;
 
     public List<ArrowDebug_Core> debugObjects;
@@ -38,6 +42,7 @@ public class Arrow : MonoBehaviour
     private bool _released;
     private bool _hit;
     private Vector3 lastPhysicsPosition;
+    private float _adjustedFireSpeed;
     
     public float AimRange => fireSpeed * lifeTime * 1.15f;
 
@@ -53,7 +58,7 @@ public class Arrow : MonoBehaviour
     
     private Dictionary<Target, TargetData> targets = new();
     
-    [ReadOnly]
+    [Space, ReadOnly]
     public Target CurrentTarget;
     
     public struct AimData
@@ -152,7 +157,7 @@ public class Arrow : MonoBehaviour
 
     private void FlightUpdate()
     {
-        transform.position += transform.forward * fireSpeed * Time.deltaTime;
+        transform.position += transform.forward * _adjustedFireSpeed * Time.deltaTime;
     }
     
     private void FlightFixedUpdate()
@@ -161,9 +166,10 @@ public class Arrow : MonoBehaviour
         var stepDist = (transform.position - lastPhysicsPosition).magnitude;
         
         var ray = new Ray(lastPhysicsPosition, transform.forward);
-        if (Physics.Raycast(ray, out var hit, stepDist + raycastDist, physicsLayer.value) && hit.collider.TryGetComponent<Target>(out var target))
+        if (Physics.Raycast(ray, out var hit, stepDist + raycastDist, physicsLayer.value))
         {
-            OnHit(target);
+            hit.collider.TryGetComponent<Target>(out var target);
+            OnHit(hit.collider, target);
         }
         
         lastPhysicsPosition = transform.position;
@@ -198,6 +204,8 @@ public class Arrow : MonoBehaviour
     private void OnRelease(float draw)
     {
         _released = true;
+        _adjustedFireSpeed = Mathf.Lerp(0, fireSpeed, draw);
+        
         _pullInteractable.PullUpdated -= OnPullUpdated;
         _pullInteractable.PullActionReleased -= OnRelease;
 
@@ -220,11 +228,12 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    private void OnHit(Target target)
+    private void OnHit(Collider col, Target target)
     {
         transform.position += transform.forward * digLength;
         _hit = true;
         
+        transform.SetParent(col.transform);
         foreach (var obj in debugObjects)
         {
             obj.OnHit(target);
@@ -232,7 +241,7 @@ public class Arrow : MonoBehaviour
 
         if (target != null)
         {
-            target.Hit(this);
+            target.Hit(this, transform.forward * _adjustedFireSpeed * forceMultiplier);
         }
     }
     

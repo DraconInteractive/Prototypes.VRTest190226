@@ -9,7 +9,14 @@ public class Target : MonoBehaviour
     
     public UnityEvent<bool> OnSetHighlight;
     
-    public UnityEvent<Arrow> OnHit;
+    public UnityEvent<Target, Arrow, Vector3> OnHit;
+
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
 
     private void OnEnable()
     {
@@ -26,8 +33,18 @@ public class Target : MonoBehaviour
         OnSetHighlight?.Invoke(active);
     }
 
-    public void Hit(Arrow arrow)
+    public float testHitForce = 5;
+    public Vector3 testHitDirection;
+    
+    [ContextMenu("Test Hit")]
+    public void TestHit()
     {
-        OnHit.Invoke(arrow);
+        Hit(null, testHitDirection.normalized * testHitForce);
+    }
+    
+    public void Hit(Arrow arrow, Vector3 force)
+    {
+        OnHit.Invoke(this, arrow, force);
+        _rb?.AddForce(force, ForceMode.Impulse);
     }
 }

@@ -1074,11 +1074,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Arrow
   aimFOV: 60
   aimAssist: 0.75
-  centreAssist: 0.4
   fireSpeed: 45
   lifeTime: 3
   raycastDist: 0.96
   digLength: 0.05
+  forceMultiplier: 1
+  baseDamage: 10
   arrowTip: {fileID: 8180095947083777019}
   debugObjects:
   - {fileID: 8588986382197680177}
