@@ -14,7 +14,10 @@ public class Arrow : MonoBehaviour
     [Tooltip("What is the FOV of the cone used to limit what targets can be assisted to?")]
     public float aimFOV = 60;
     [Range(0,1), Tooltip("How much should the aim assist correct the trajectory of the arrow? 1 = 100% assist, 0.5 = 50% assist, 0 = no assist")]
-    public float aimAssist = 0.2f;
+    public float releaseAssist = 0.2f;
+    [Range(0, 1), Tooltip("How much should the aim assist correct the trajectory of the arrow *during flight*?  1 = 100% assist, 0.5 = 50% assist, 0 = no assist")]
+    public float flightAssist = 0.2f;
+    public float flightAssistRate = 90;
     
     [Space]
     public float fireSpeed = 10;
@@ -136,14 +139,14 @@ public class Arrow : MonoBehaviour
             CurrentTarget?.SetHighlight(true);
         }
 
-        TryGetAssistedRotation(out var adjustedAssistRotation, out var fullAssistRotation);
+        TryGetAssistedRotation(out var releaseRotation, out var fullRotation);
 
-        AimData aimData = new AimData()
+        var aimData = new AimData()
         {
             valid = foundValidTarget,
             arrowVector = transform.forward,
-            adjustedAssistRotation = adjustedAssistRotation,
-            fullAssistRotation = fullAssistRotation
+            adjustedAssistRotation = releaseRotation,
+            fullAssistRotation = fullRotation
         };
 
         foreach (var obj in debugObjects)
@@ -158,6 +161,15 @@ public class Arrow : MonoBehaviour
     private void FlightUpdate()
     {
         transform.position += transform.forward * _adjustedFireSpeed * Time.deltaTime;
+        
+        if (!_hit && CurrentTarget != null && TryGetTargetData(CurrentTarget, out var data))
+        {
+            targets[CurrentTarget] = data;
+            
+            TryGetAssistedRotation(out var _, out var fullRotation);
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, fullRotation, flightAssist * flightAssistRate * Time.deltaTime);
+        }
     }
     
     private void FlightFixedUpdate()
@@ -213,9 +225,9 @@ public class Arrow : MonoBehaviour
 
         if (CurrentTarget != null)
         {
-            if (TryGetAssistedRotation(out var adjustedAssistRotation, out var fullAssistRotation))
+            if (TryGetAssistedRotation(out var releaseRotation, out var fullRotation))
             {
-                transform.rotation = adjustedAssistRotation;
+                transform.rotation = releaseRotation;
             }
             CurrentTarget.SetHighlight(false);
         }
@@ -256,16 +268,16 @@ public class Arrow : MonoBehaviour
     }
 
     // Helpers
-    private bool TryGetAssistedRotation(out Quaternion adjustedAssistRotation, out Quaternion fullAssistRotation)
+    private bool TryGetAssistedRotation(out Quaternion releaseAssistRotation, out Quaternion fullAssistRotation)
     {
         if (CurrentTarget == null || !targets.TryGetValue(CurrentTarget, out var data) || !data.valid)
         {
-            adjustedAssistRotation = Quaternion.identity;
+            releaseAssistRotation = Quaternion.identity;
             fullAssistRotation = Quaternion.identity;
             return false;
         }
         var targetRot = Quaternion.LookRotation(data.releaseVector);
-        adjustedAssistRotation = Quaternion.Slerp(transform.rotation, targetRot, aimAssist);
+        releaseAssistRotation = Quaternion.Slerp(transform.rotation, targetRot, releaseAssist);
         fullAssistRotation = targetRot;
         return true;
     }
@@ -275,14 +287,11 @@ public class Arrow : MonoBehaviour
         bestTarget = null;
         bestData = default;
 
-        foreach (var kvp in targets)
+        foreach (var kvp in targets.Where(kvp => kvp.Value.valid))
         {
-            if (!kvp.Value.valid) continue;
-            if (kvp.Value.dot > bestData.dot)
-            {
-                bestTarget = kvp.Key;
-                bestData = kvp.Value;
-            }
+            if (!(kvp.Value.dot > bestData.dot)) continue;
+            bestTarget = kvp.Key;
+            bestData = kvp.Value;
         }
 
         return bestTarget != null;
@@ -312,9 +321,10 @@ public class Arrow : MonoBehaviour
     
     private bool TryGetTargetData(Target target, out float dot, out Vector3 releaseVector)
     {
-        releaseVector = target.transform.position - transform.position;
+        var targetPos = target.GetTargetPosition();
+        releaseVector = targetPos - transform.position;
         
-        dot = Vector3.Dot(transform.forward, (target.transform.position - transform.position).normalized);
+        dot = Vector3.Dot(transform.forward, (targetPos - transform.position).normalized);
         
         return dot > Mathf.Cos(aimFOV * 0.5f * Mathf.Deg2Rad);
     }

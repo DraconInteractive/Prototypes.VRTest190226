@@ -47,4 +47,10 @@ public class Target : MonoBehaviour
         OnHit.Invoke(this, arrow, force);
         _rb?.AddForce(force, ForceMode.Impulse);
     }
+
+    public Vector3 GetTargetPosition()
+    {
+        // In the future, we could add some randomisation or customisation here
+        return this.transform.position;
+    }
 }
