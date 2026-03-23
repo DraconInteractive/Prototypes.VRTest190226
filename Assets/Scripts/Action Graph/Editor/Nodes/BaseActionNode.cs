@@ -2,8 +2,7 @@ using System;
 using Unity.GraphToolkit.Editor;
 using UnityEngine;
 
-[Serializable]
-public class BaseActionNode : Node
+public abstract class BaseActionNode : Node
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {

@@ -1,8 +1,7 @@
 ﻿using Unity.GraphToolkit.Editor;
 using System;
 
-[Serializable]
-public class BaseContextActionNode : ContextNode
+public abstract class BaseContextActionNode : ContextNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {

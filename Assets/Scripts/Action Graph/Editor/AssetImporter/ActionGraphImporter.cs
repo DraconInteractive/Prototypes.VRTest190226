@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
 using UnityEditor.AssetImporters;
@@ -27,13 +28,30 @@ public class ActionGraphImporter : ScriptedImporter
 
         var runtimeGraph = new RuntimeActionGraph();
         
+        // First, create the runtime variants of all nodes and add them to the runtime graph
+        // Create a hashmap of map[editor]=runtime and populate that when you do the above
+        // Then, loop back through the nodes to update ports
+        // E.g, foreach port in outputs, get connected ports
+        // Get the node owner of the other port, and create that connection for both nodes
+        // Since every connected port output needs an input, you shouldnt need to iterate inputs separately
+        // Make sure to also update node values, which is important for nodes to get unconnected default values
+        
+        // Some nodes are connected to billboard values. Investigate how that works
+        
+        Dictionary<INode, BaseRTNode> nodeMap = new Dictionary<INode, BaseRTNode>();
+        
         foreach (var node in nodes)
         {
-            // 1. Get runtime version
-            // 2. Add to runtime graph nodes
+            // 1. Resolve runtime and populate map
             
-            // 3. Instead of storing pointer to node in output, convert the output to an int that resolves to the index of the correct node
-            //    Either that, or put in another loop once this is done and resolve the index to the runtime node instead
+            // Try and find matching runtime type
+            // e.g if node is BaseNode, get BaseNode.RuntimeType
+            // Use a default node type for any non-compliant nodes. These should have their ports etc populated since the runtime wont be set up
+        }
+        
+        foreach (var node in nodes)
+        {
+            // 2. Resolve ports
             foreach (var output in node.GetOutputPorts())
             {
                 

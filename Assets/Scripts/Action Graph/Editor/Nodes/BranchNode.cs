@@ -2,7 +2,7 @@
 using Unity.GraphToolkit.Editor;
 
 [Serializable]
-public class BranchNode : Node
+public class BranchNode : Node, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
@@ -10,5 +10,10 @@ public class BranchNode : Node
         context.AddInputPort<bool>("Condition");
         context.AddOutputPort("True");
         context.AddOutputPort("False");
+    }
+
+    public Type RuntimeType()
+    {
+        return typeof(BranchRTNode);
     }
 }
