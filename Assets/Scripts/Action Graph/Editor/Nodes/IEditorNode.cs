@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IEditorNode
 {
-    public Type RuntimeType();
+    public BaseRTNode CreateRuntimeType();
 }

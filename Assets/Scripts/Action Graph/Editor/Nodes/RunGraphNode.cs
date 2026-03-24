@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class RunGraphNode : BaseActionNode
+public class RunGraphNode : BaseActionNode, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
@@ -10,5 +10,10 @@ public class RunGraphNode : BaseActionNode
 
         context.AddInputPort<ActionGraph>("Graph");
         context.AddInputPort<bool>("Wait?").WithDefaultValue(true);
+    }
+
+    public BaseRTNode CreateRuntimeType()
+    {
+        return new RunGraphRTNode();
     }
 }

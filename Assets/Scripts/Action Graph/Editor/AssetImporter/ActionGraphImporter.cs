@@ -47,14 +47,80 @@ public class ActionGraphImporter : ScriptedImporter
             // Try and find matching runtime type
             // e.g if node is BaseNode, get BaseNode.RuntimeType
             // Use a default node type for any non-compliant nodes. These should have their ports etc populated since the runtime wont be set up
+            if (node is IEditorNode editorNode)
+            {
+                nodeMap[node] = editorNode.CreateRuntimeType();
+            }
+            else
+            {
+                nodeMap[node] = new FallbackRTNode();
+            }
+        }
+        
+        // Populate ports
+        // This could be done manually in definition, but fuck that
+        foreach (var node in nodes)
+        {
+            var rt = nodeMap[node];
+            foreach (var input in node.GetInputPorts())
+            {
+                var newPort = new Port()
+                {
+                    Name = input.name,
+                    Type = input.dataType,
+                    Node = rt
+                };
+                if (!input.isConnected && input.TryGetValue(out object value))
+                {
+                    newPort.Value = value;
+                }
+
+                rt.Inputs.Add(newPort);
+            }
+
+            foreach (var output in node.GetOutputPorts())
+            {
+                var newPort = new Port()
+                {
+                    Name = output.name,
+                    Type = output.dataType,
+                    Node = rt
+                };
+                if (!output.isConnected && output.TryGetValue(out object value))
+                {
+                    newPort.Value = value;
+                }
+                
+                rt.Outputs.Add(newPort);
+            }
         }
         
         foreach (var node in nodes)
         {
+            var rt = nodeMap[node];
             // 2. Resolve ports
             foreach (var output in node.GetOutputPorts())
             {
+                var rtPort = rt.Outputs.First(x => x.Name == output.name);
                 
+                if (output.isConnected)
+                {
+                    var connectedInputs = new List<IPort>();
+                    output.GetConnectedPorts(connectedInputs);
+                    foreach (var connection in connectedInputs)
+                    {
+                        var targetRT = nodeMap[connection.GetNode()];
+                        var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
+                        // Add connection to this ports (output) list
+                        rtPort.ConnectedPorts.Add(targetRTPort);
+                        // Add connection to this ports (input) list
+                        targetRTPort.ConnectedPorts.Add(rtPort);
+                    }
+                }
+                else
+                {
+                    
+                }
             }
 
             foreach (var input in node.GetInputPorts())

@@ -3,9 +3,12 @@ using Unity.GraphToolkit.Editor;
 using UnityEngine;
 
 [Serializable]
-public class SpawnWaveNode : BaseContextActionNode
+public class SpawnWaveNode : BaseContextActionNode, IEditorNode
 {
-    
+    public BaseRTNode CreateRuntimeType()
+    {
+        return new SpawnWaveRTNode();
+    }
 }
 
 [UseWithContext(typeof(SpawnWaveNode))]

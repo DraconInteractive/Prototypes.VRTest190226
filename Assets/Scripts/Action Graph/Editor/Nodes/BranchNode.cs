@@ -12,8 +12,8 @@ public class BranchNode : Node, IEditorNode
         context.AddOutputPort("False");
     }
 
-    public Type RuntimeType()
+    public BaseRTNode CreateRuntimeType()
     {
-        return typeof(BranchRTNode);
+        return new BranchRTNode();
     }
 }
