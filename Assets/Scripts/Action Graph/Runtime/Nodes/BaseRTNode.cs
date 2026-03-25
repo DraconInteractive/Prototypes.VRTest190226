@@ -8,8 +8,8 @@ using Object = System.Object;
 public abstract class BaseRTNode
 {
     // Consider making this a dictionary?
-    public List<Port> Inputs;
-    public List<Port> Outputs;
+    public List<Port> Inputs = new();
+    public List<Port> Outputs = new();
 
     public enum NodeState
     {

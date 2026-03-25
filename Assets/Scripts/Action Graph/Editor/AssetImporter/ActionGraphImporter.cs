@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
 using UnityEditor.AssetImporters;
@@ -123,5 +124,15 @@ public class ActionGraphImporter : ScriptedImporter
                 
             }
         }
+
+        runtimeGraph.Nodes = nodeMap.Values.ToList();
+
+        var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath) + "_rt";
+        var graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
+        graphAsset.name = assetName;
+        graphAsset.Graph = runtimeGraph;
+
+        ctx.AddObjectToAsset("runtimeGraph", graphAsset);
+        ctx.SetMainObject(graphAsset);
     }
 }

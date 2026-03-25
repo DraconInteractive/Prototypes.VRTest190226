@@ -8,7 +8,7 @@ public class RunGraphNode : BaseActionNode, IEditorNode
     {
         base.OnDefinePorts(context);
 
-        context.AddInputPort<ActionGraph>("Graph");
+        context.AddInputPort<ActionGraphAsset>("Graph");
         context.AddInputPort<bool>("Wait?").WithDefaultValue(true);
     }
 
