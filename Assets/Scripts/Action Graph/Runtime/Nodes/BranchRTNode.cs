@@ -1,8 +1,8 @@
 public class BranchRTNode : BaseRTNode
 {
-    protected override void ExecuteInternal()
+    protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        if (!TryGetInput<bool>("Condition", out bool condition))
+        if (!TryGetInput<bool>("Condition", graph, out bool condition))
         {
             SetFailed();
             return;
@@ -11,6 +11,8 @@ public class BranchRTNode : BaseRTNode
         SetComplete();
 
         var execOutput = GetOutputPort(condition ? "True" : "False");
-        execOutput?.ConnectedPorts[0]?.Node.Execute();
+        if (execOutput == null || execOutput.Connections.Count == 0) return;
+        graph.ResolveInputConnection(execOutput.Connections[0], out var nextNode, out _);
+        nextNode?.Execute(graph);
     }
 }

@@ -12,15 +12,15 @@ public class ActionGraphImporter : ScriptedImporter
     public override void OnImportAsset(AssetImportContext ctx)
     {
         var graph = GraphDatabase.LoadGraphForImporter<ActionGraph>(ctx.assetPath);
-        
+
         if (graph == null)
         {
             Debug.LogError($"Failed to load Visual Novel Director graph asset: {ctx.assetPath}");
             return;
         }
 
-        var nodes = graph.GetNodes();
-        
+        var nodes = graph.GetNodes().ToList();
+
         var startNode = nodes.FirstOrDefault(x => x is StartNode);
         if (startNode == null)
         {
@@ -29,100 +29,63 @@ public class ActionGraphImporter : ScriptedImporter
         }
 
         var runtimeGraph = new RuntimeActionGraph();
-        
-        // First, create the runtime variants of all nodes and add them to the runtime graph
-        // Create a hashmap of map[editor]=runtime and populate that when you do the above
-        // Then, loop back through the nodes to update ports
-        // E.g, foreach port in outputs, get connected ports
-        // Get the node owner of the other port, and create that connection for both nodes
-        // Since every connected port output needs an input, you shouldnt need to iterate inputs separately
-        // Make sure to also update node values, which is important for nodes to get unconnected default values
-        
-        // Some nodes are connected to billboard values. Investigate how that works
-        
-        Dictionary<INode, BaseRTNode> nodeMap = new Dictionary<INode, BaseRTNode>();
-        
+        var nodeMap = new Dictionary<INode, BaseRTNode>();
+
+        // Pass 1: create runtime nodes, assign IDs, populate map
+        int nextId = 0;
         foreach (var node in nodes)
         {
-            // 1. Resolve runtime and populate map
-            
-            // Try and find matching runtime type
-            // e.g if node is BaseNode, get BaseNode.RuntimeType
-            // Use a default node type for any non-compliant nodes. These should have their ports etc populated since the runtime wont be set up
-            if (node is IEditorNode editorNode)
-            {
-                nodeMap[node] = editorNode.CreateRuntimeType();
-            }
-            else
-            {
-                nodeMap[node] = new FallbackRTNode();
-            }
+            var rt = node is IEditorNode editorNode
+                ? editorNode.CreateRuntimeType()
+                : new FallbackRTNode();
+
+            rt.NodeId = (nextId++).ToString();
+            nodeMap[node] = rt;
         }
-        
-        // Populate ports
-        // This could be done manually in definition, but fuck that
+
+        // Pass 2: populate ports with NodeId and default values
         foreach (var node in nodes)
         {
             var rt = nodeMap[node];
             foreach (var input in node.GetInputPorts())
             {
-                var newPort = new Port()
-                {
-                    Name = input.name,
-                    Type = input.dataType,
-                    Node = rt
-                };
+                var newPort = new Port { Name = input.name, Type = input.dataType, NodeId = rt.NodeId };
                 if (!input.isConnected && input.TryGetValue(out object value))
-                {
                     newPort.Value = value;
-                }
-
                 rt.Inputs.Add(newPort);
             }
 
             foreach (var output in node.GetOutputPorts())
             {
-                var newPort = new Port()
-                {
-                    Name = output.name,
-                    Type = output.dataType,
-                    Node = rt
-                };
+                var newPort = new Port { Name = output.name, Type = output.dataType, NodeId = rt.NodeId };
                 if (!output.isConnected && output.TryGetValue(out object value))
-                {
                     newPort.Value = value;
-                }
-                
                 rt.Outputs.Add(newPort);
             }
         }
-        
+
+        // Pass 3: wire connections as "nodeId__portName" strings
         foreach (var node in nodes)
         {
             var rt = nodeMap[node];
-            // 2. Resolve ports
             foreach (var output in node.GetOutputPorts())
             {
-                var rtPort = rt.Outputs.First(x => x.Name == output.name);
-
                 if (!output.isConnected) continue;
-                
+
+                var rtOutputPort = rt.Outputs.First(x => x.Name == output.name);
                 var connectedInputs = new List<IPort>();
                 output.GetConnectedPorts(connectedInputs);
+
                 foreach (var connection in connectedInputs)
                 {
                     var targetRT = nodeMap[connection.GetNode()];
                     var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
-                    // Add connection to this ports (output) list
-                    rtPort.ConnectedPorts.Add(targetRTPort);
-                    // Add connection to this ports (input) list
-                    targetRTPort.ConnectedPorts.Add(rtPort);
-                }
-            }
 
-            foreach (var input in node.GetInputPorts())
-            {
-                
+                    // Output port stores a connection pointing to the input port's node+name
+                    rtOutputPort.Connections.Add($"{targetRT.NodeId}__{targetRTPort.Name}");
+                    // Input port stores a connection pointing back to this output port's node+name
+                    targetRTPort.Connections.Add($"{rt.NodeId}__{rtOutputPort.Name}");
+                }
             }
         }
 
@@ -130,25 +93,22 @@ public class ActionGraphImporter : ScriptedImporter
 
         var eGraphName = Path.GetFileName(ctx.assetPath);
         var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath) + "_rt";
-        var graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
-        graphAsset.name = assetName;
-        graphAsset.Graph = runtimeGraph;
+        var path = ctx.assetPath.Replace(eGraphName, assetName + ".asset");
 
-        var path = ctx.assetPath.Replace(eGraphName,
-            assetName + ".asset");                            
-        var existing = AssetDatabase.LoadAssetAtPath<ActionGraphAsset>(path);                               
-        if (existing != null)                           
+        var serialized = runtimeGraph.Serialize();
+
+        var existing = AssetDatabase.LoadAssetAtPath<ActionGraphAsset>(path);
+        if (existing != null)
         {
-            existing.Graph = runtimeGraph;
+            existing.SerializedGraph = serialized;
             EditorUtility.SetDirty(existing);
-        }                                                 
+        }
         else
-        {                                                 
+        {
+            var graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
+            graphAsset.name = assetName;
+            graphAsset.SerializedGraph = serialized;
             AssetDatabase.CreateAsset(graphAsset, path);
         }
-
-        
-        //ctx.AddObjectToAsset("runtimeGraph", graphAsset);
-        //ctx.SetMainObject(graphAsset);
     }
 }

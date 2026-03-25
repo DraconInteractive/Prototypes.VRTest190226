@@ -1,7 +1,7 @@
 public class StartRTNode : BaseRTNode
 {
-    protected override void ExecuteInternal()
+    protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        DefExecNext();
+        DefExecNext(graph);
     }
 }

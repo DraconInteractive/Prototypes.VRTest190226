@@ -12,11 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042d7db8cc0d7404fbd3e684805b190f, type: 3}
   m_Name: MyActionGraph_rt
   m_EditorClassIdentifier: Assembly-CSharp::ActionGraphAsset
-  Graph:
-    rid: 9097120020836385115
-  references:
-    version: 2
-    RefIds:
-    - rid: 9097120020836385115
-      type: {class: RuntimeActionGraph, ns: , asm: Assembly-CSharp}
-      data: 
+  SerializedGraph: "{\r\n  \"Nodes\": [\r\n    {\r\n      \"$type\": \"StartRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [],\r\n     
+    \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
+    \"0\",\r\n          \"Connections\": [\r\n            \"1__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
+    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"BranchRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"1\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"1\",\r\n         
+    \"Connections\": [\r\n            \"0__Exec\"\r\n          ],\r\n          \"TypeName\":
+    null,\r\n          \"Value\": null\r\n        },\r\n        {\r\n          \"Name\":
+    \"Condition\",\r\n          \"NodeId\": \"1\",\r\n          \"Connections\":
+    [],\r\n          \"TypeName\": \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+    PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": false\r\n        }\r\n     
+    ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"True\",\r\n         
+    \"NodeId\": \"1\",\r\n          \"Connections\": [\r\n            \"2__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"False\",\r\n          \"NodeId\": \"1\",\r\n         
+    \"Connections\": [\r\n            \"3__Exec\"\r\n          ],\r\n          \"TypeName\":
+    null,\r\n          \"Value\": null\r\n        }\r\n      ],\r\n      \"State\":
+    0\r\n    },\r\n    {\r\n      \"$type\": \"DebugLogRTNode, Assembly-CSharp\",\r\n     
+    \"NodeId\": \"2\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\":
+    \"Exec\",\r\n          \"NodeId\": \"2\",\r\n          \"Connections\": [\r\n           
+    \"1__True\"\r\n          ],\r\n          \"TypeName\": null,\r\n          \"Value\":
+    null\r\n        },\r\n        {\r\n          \"Name\": \"Message\",\r\n         
+    \"NodeId\": \"2\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": \"Executing A\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n       
+    {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"2\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": null,\r\n          \"Value\":
+    null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n     
+    \"$type\": \"DebugLogRTNode, Assembly-CSharp\",\r\n      \"NodeId\": \"3\",\r\n     
+    \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
+    \"3\",\r\n          \"Connections\": [\r\n            \"1__False\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Message\",\r\n          \"NodeId\": \"3\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Executing
+    B\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"3\",\r\n          \"Connections\":
+    [],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n       
+    }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n  ]\r\n}"

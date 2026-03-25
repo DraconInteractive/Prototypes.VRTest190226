@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class ActionGraphAsset : ScriptableObject
 {
-    [SerializeReference]
-    public RuntimeActionGraph Graph;
+    [TextArea(6, 20)]
+    public string SerializedGraph;
 
-    public RuntimeActionGraph Provision() => Graph.Clone();
+    public RuntimeActionGraph Provision() =>
+        RuntimeActionGraph.Deserialize(SerializedGraph).Clone();
 }
