@@ -20,7 +20,7 @@ public abstract class BaseRTNode
     }
 
     private NodeState _state;
-    public NodeState State =>  _state;
+    public NodeState State => _state;
 
     public void Execute()
     {
@@ -29,6 +29,9 @@ public abstract class BaseRTNode
     }
 
     protected abstract void ExecuteInternal();
+
+    protected void SetComplete() => _state = NodeState.Complete;
+    protected void SetFailed() => _state = NodeState.Failed;
 
     protected Port GetInputPort(string name) => Inputs.FirstOrDefault(x => x.Name == name);
     protected Port GetOutputPort(string name) => Outputs.FirstOrDefault(x => x.Name == name);
@@ -50,11 +53,29 @@ public abstract class BaseRTNode
             return false;
         }
 
-        // Check if connected, if not, just return default
         if (inputPort.ConnectedPorts.Count > 0)
         {
-            // Recursively assess inputs
-            // For now we're only ever going to assess the first input connection if there are multiple
+            // Only ever follow the first connection if multiple exist
+            var upstreamPort = inputPort.ConnectedPorts[0];
+            var upstreamNode = upstreamPort.Node;
+
+            if (upstreamNode.State == NodeState.Idle)
+                upstreamNode.Execute(); // Recurse: upstream may itself call TryGetInput
+
+            if (upstreamNode.State == NodeState.Failed)
+            {
+                value = default;
+                return false;
+            }
+
+            if (upstreamPort.Value == null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = (T)upstreamPort.Value;
+            return true;
         }
         else
         {
