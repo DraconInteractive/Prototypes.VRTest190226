@@ -113,7 +113,7 @@ public abstract class BaseRTNode
 public class Port
 {
     public string Name;
-    public List<Port> ConnectedPorts;
+    public List<Port> ConnectedPorts = new();
     public Type Type;
     public object Value;
 

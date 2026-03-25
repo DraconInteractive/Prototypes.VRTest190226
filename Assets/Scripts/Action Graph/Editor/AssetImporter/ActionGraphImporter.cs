@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
+using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
@@ -127,12 +128,27 @@ public class ActionGraphImporter : ScriptedImporter
 
         runtimeGraph.Nodes = nodeMap.Values.ToList();
 
+        var eGraphName = Path.GetFileName(ctx.assetPath);
         var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath) + "_rt";
         var graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
         graphAsset.name = assetName;
         graphAsset.Graph = runtimeGraph;
 
-        ctx.AddObjectToAsset("runtimeGraph", graphAsset);
-        ctx.SetMainObject(graphAsset);
+        var path = ctx.assetPath.Replace(eGraphName,
+            assetName + ".asset");                            
+        var existing = AssetDatabase.LoadAssetAtPath<ActionGraphAsset>(path);                               
+        if (existing != null)                           
+        {
+            existing.Graph = runtimeGraph;
+            EditorUtility.SetDirty(existing);
+        }                                                 
+        else
+        {                                                 
+            AssetDatabase.CreateAsset(graphAsset, path);
+        }
+
+        
+        //ctx.AddObjectToAsset("runtimeGraph", graphAsset);
+        //ctx.SetMainObject(graphAsset);
     }
 }
