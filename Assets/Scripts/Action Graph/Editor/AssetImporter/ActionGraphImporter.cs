@@ -102,24 +102,19 @@ public class ActionGraphImporter : ScriptedImporter
             foreach (var output in node.GetOutputPorts())
             {
                 var rtPort = rt.Outputs.First(x => x.Name == output.name);
+
+                if (!output.isConnected) continue;
                 
-                if (output.isConnected)
+                var connectedInputs = new List<IPort>();
+                output.GetConnectedPorts(connectedInputs);
+                foreach (var connection in connectedInputs)
                 {
-                    var connectedInputs = new List<IPort>();
-                    output.GetConnectedPorts(connectedInputs);
-                    foreach (var connection in connectedInputs)
-                    {
-                        var targetRT = nodeMap[connection.GetNode()];
-                        var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
-                        // Add connection to this ports (output) list
-                        rtPort.ConnectedPorts.Add(targetRTPort);
-                        // Add connection to this ports (input) list
-                        targetRTPort.ConnectedPorts.Add(rtPort);
-                    }
-                }
-                else
-                {
-                    
+                    var targetRT = nodeMap[connection.GetNode()];
+                    var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
+                    // Add connection to this ports (output) list
+                    rtPort.ConnectedPorts.Add(targetRTPort);
+                    // Add connection to this ports (input) list
+                    targetRTPort.ConnectedPorts.Add(rtPort);
                 }
             }
 
