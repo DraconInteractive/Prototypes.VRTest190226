@@ -35,6 +35,12 @@ public abstract class BaseRTNode
 
     protected Port GetInputPort(string name) => Inputs.FirstOrDefault(x => x.Name == name);
     protected Port GetOutputPort(string name) => Outputs.FirstOrDefault(x => x.Name == name);
+
+    protected void DefExecNext()
+    {
+        SetComplete();
+        GetOutputPort("Exec")?.ConnectedPorts[0]?.Node.Execute();
+    }
     
     protected bool TryGetInput<T>(string portName, out T value)
     {

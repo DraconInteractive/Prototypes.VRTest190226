@@ -1,4 +1,7 @@
-﻿public class StartRTNode : BaseRTNode
+public class StartRTNode : BaseRTNode
 {
-    
+    protected override void ExecuteInternal()
+    {
+        DefExecNext();
+    }
 }
