@@ -12,7 +12,8 @@ public class RuntimeActionGraph
     private static readonly JsonSerializerSettings JsonSettings = new()
     {
         TypeNameHandling = TypeNameHandling.Auto,
-        Formatting = Formatting.Indented
+        Formatting = Formatting.Indented,
+        Converters = { new ActionGraphAssetConverter() }
     };
 
     public string Serialize() => JsonConvert.SerializeObject(this, JsonSettings);
