@@ -13,31 +13,34 @@ public class SpawnWaveNode : BaseContextActionNode, IEditorNode
 
 [UseWithContext(typeof(SpawnWaveNode))]
 [Serializable]
-public class SpawnMonsterBlockNode : BlockNode
+public class SpawnMonsterBlockNode : BlockNode, IEditorNode
 {
-    public enum MonsterType
-    {
-        Wolf,
-        Demon,
-        Angel
-    }
-    
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
         context.AddInputPort<int>("Count").WithDefaultValue(1);
-        context.AddInputPort<MonsterType>("Prefab");
+        context.AddInputPort<SpawnMonsterRTBlockNode.MonsterType>("Prefab");
         context.AddInputPort<Transform[]>("Spawn Points");
+    }
+
+    public BaseRTNode CreateRuntimeType()
+    {
+        return new SpawnMonsterRTBlockNode();
     }
 }
 
 [UseWithContext(typeof(SpawnWaveNode))]
 [Serializable]
-public class RewardBlockNode : BlockNode
+public class RewardBlockNode : BlockNode, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
         context.AddInputPort<int>("Gold").WithDefaultValue(1);
         context.AddInputPort<int>("XP").WithDefaultValue(1);
         context.AddInputPort<GameObject[]>("Items");
+    }
+
+    public BaseRTNode CreateRuntimeType()
+    {
+        return new RewardBlockRTNode();
     }
 }

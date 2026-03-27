@@ -44,6 +44,19 @@ public class ActionGraphImporter : ScriptedImporter
 
             rt.NodeId = (nextId++).ToString();
             nodeMap[node] = rt;
+
+            if (node is ContextNode ctxNode)
+            {
+                var blocks = ctxNode.blockNodes.ToList();
+                foreach (var block in blocks)
+                {
+                    var blockRT = block is IEditorNode edBlock
+                        ? edBlock.CreateRuntimeType()
+                        : new FallbackRTNode();
+                    blockRT.NodeId = (nextId++).ToString();
+                    nodeMap[block] = blockRT;
+                }
+            }
         }
 
         // Pass 2: populate ports with NodeId and default values
@@ -64,6 +77,34 @@ public class ActionGraphImporter : ScriptedImporter
                 if (!output.isConnected && output.TryGetValue(out object value))
                     newPort.Value = value;
                 rt.Outputs.Add(newPort);
+            }
+
+            if (node is ContextNode ctxNode)
+            {
+                foreach (var block in ctxNode.blockNodes)
+                {
+                    var blockRT = nodeMap[block];
+                    foreach (var input in block.GetInputPorts())
+                    {
+                        var newPort = new Port { Name = input.name, Type = input.dataType, NodeId = blockRT.NodeId };
+                        if (!input.isConnected && input.TryGetValue(out object value))
+                        {
+                            newPort.Value = value;
+                        }
+
+                        blockRT.Inputs.Add(newPort);
+                    }
+                    foreach (var output in block.GetOutputPorts())
+                    {
+                        var newPort = new Port { Name = output.name, Type = output.dataType, NodeId = blockRT.NodeId };
+                        if (!output.isConnected && output.TryGetValue(out object value))
+                        {
+                            newPort.Value = value;
+                        }
+
+                        blockRT.Outputs.Add(newPort);
+                    }
+                }
             }
         }
 
@@ -86,6 +127,31 @@ public class ActionGraphImporter : ScriptedImporter
 
                     rtOutputPort.Connections.Add($"{targetRT.NodeId}__{targetRTPort.Name}");
                     targetRTPort.Connections.Add($"{rt.NodeId}__{rtOutputPort.Name}");
+                }
+            }
+
+            if (node is ContextNode ctxNode)
+            {
+                foreach (var block in ctxNode.blockNodes)
+                {
+                    var blockRT = nodeMap[block];
+                    foreach (var output in block.GetOutputPorts())
+                    {
+                        if (!output.isConnected) continue;
+
+                        var rtOutputPort = rt.Outputs.First(x => x.Name == output.name);
+                        var connectedinputs = new List<IPort>();
+                        output.GetConnectedPorts(connectedinputs);
+
+                        foreach (var connection in connectedinputs)
+                        {
+                            var targetRT = nodeMap[connection.GetNode()];
+                            var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
+                            
+                            rtOutputPort.Connections.Add($"{targetRT.NodeId}__{targetRTPort.Name}");
+                            targetRTPort.Connections.Add($"{rt.NodeId}__{rtOutputPort.Name}");
+                        }
+                    }
                 }
             }
         }
@@ -124,6 +190,8 @@ public class ActionGraphImporter : ScriptedImporter
             registry = ScriptableObject.CreateInstance<ActionGraphRegistry>();
             AssetDatabase.CreateAsset(registry, RegistryPath);
         }
+
+        //registry.Graphs.RemoveAll(x => x == null);
 
         // Add to registry if not already present
         if (registry.Graphs.All(g => g.name != graphAsset.name))

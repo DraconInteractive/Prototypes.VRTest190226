@@ -19,6 +19,70 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 2920746497389887784
+      type: {class: UserBlockNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
+      data:
+        m_Guid:
+          m_Value0: 1430021014600930555
+          m_Value1: 950838510422588582
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: fbd4a1448974d813a6fc7f64960e320d
+        m_Version: 2
+        m_Position: {x: 0, y: 0}
+        m_Title: UserBlockNodeModelImp
+        m_Tooltip: 
+        m_NodePreviewModel:
+          rid: -2
+        m_State: 0
+        m_InputConstantsById:
+          m_KeyList:
+          - Count
+          - Prefab
+          - Spawn Points
+          m_ValueList:
+          - rid: 2920746497389887785
+          - rid: 2920746497389887786
+          - rid: 2920746497389887787
+        m_InputPortInfos:
+          expandedPortsById:
+            m_KeyList: []
+            m_ValueList: 
+        m_OutputPortInfos:
+          expandedPortsById:
+            m_KeyList: []
+            m_ValueList: 
+        m_Collapsed: 0
+        m_CurrentModeIndex: 0
+        m_ElementColor:
+          m_Color: {r: 0, g: 0, b: 0, a: 0}
+          m_HasUserColor: 0
+        m_ContextNodeModel:
+          rid: 9097120020836385173
+        m_Node:
+          rid: 2920746497389887788
+    - rid: 2920746497389887785
+      type: {class: 'Constant`1[[System.Int32, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 77
+    - rid: 2920746497389887786
+      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          m_EnumType:
+            m_Identification: SpawnMonsterRTBlockNode+MonsterType, Assembly-CSharp,
+              Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_Value: 0
+        m_EnumType:
+          m_Identification: SpawnMonsterRTBlockNode+MonsterType, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - rid: 2920746497389887787
+      type: {class: 'Constant`1[[UnityEngine.Transform[], UnityEngine.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: []
+    - rid: 2920746497389887788
+      type: {class: SpawnMonsterBlockNode, ns: , asm: Assembly-CSharp-Editor}
+      data: 
     - rid: 9097119993987334371
       type: {class: GraphModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
       data:
@@ -54,10 +118,10 @@ MonoBehaviour:
         m_LocalSubgraphs: []
         m_LastKnownBounds:
           serializedVersion: 2
-          x: 383
-          y: 146
-          width: 1396
-          height: 653
+          x: 382.66666
+          y: 145.33333
+          width: 1397.3334
+          height: 654.6667
         m_GraphElementMetaData:
         - m_Guid:
             m_Value0: 14314544630611895647
@@ -590,11 +654,11 @@ MonoBehaviour:
           m_Color: {r: 0, g: 0, b: 0, a: 0}
           m_HasUserColor: 0
         m_Blocks:
-        - rid: 9097120020836385176
+        - rid: 2920746497389887784
         - rid: 9097120020836385181
         m_BlockGuids:
         - serializedVersion: 2
-          Hash: 66977193f4b9c077bda4044d3f90ae99
+          Hash: fbd4a1448974d813a6fc7f64960e320d
         - serializedVersion: 2
           Hash: 94346003a7ae18c42c20ee55c8617cef
         m_Subtitle: 
@@ -634,70 +698,6 @@ MonoBehaviour:
           m_Title: Exec
     - rid: 9097120020836385175
       type: {class: SpawnWaveNode, ns: , asm: Assembly-CSharp-Editor}
-      data: 
-    - rid: 9097120020836385176
-      type: {class: UserBlockNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
-      data:
-        m_Guid:
-          m_Value0: 8629101346138724198
-          m_Value1: 11073947135300117693
-        m_HashGuid:
-          serializedVersion: 2
-          Hash: 66977193f4b9c077bda4044d3f90ae99
-        m_Version: 2
-        m_Position: {x: 0, y: 0}
-        m_Title: UserBlockNodeModelImp
-        m_Tooltip: 
-        m_NodePreviewModel:
-          rid: -2
-        m_State: 0
-        m_InputConstantsById:
-          m_KeyList:
-          - Count
-          - Prefab
-          - Spawn Points
-          m_ValueList:
-          - rid: 9097120020836385177
-          - rid: 9097120020836385178
-          - rid: 9097120020836385179
-        m_InputPortInfos:
-          expandedPortsById:
-            m_KeyList: []
-            m_ValueList: 
-        m_OutputPortInfos:
-          expandedPortsById:
-            m_KeyList: []
-            m_ValueList: 
-        m_Collapsed: 0
-        m_CurrentModeIndex: 0
-        m_ElementColor:
-          m_Color: {r: 0, g: 0, b: 0, a: 0}
-          m_HasUserColor: 0
-        m_ContextNodeModel:
-          rid: 9097120020836385173
-        m_Node:
-          rid: 9097120020836385180
-    - rid: 9097120020836385177
-      type: {class: 'Constant`1[[System.Int32, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 1
-    - rid: 9097120020836385178
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          m_EnumType:
-            m_Identification: SpawnMonsterBlockNode+MonsterType, Assembly-CSharp-Editor,
-              Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 0
-        m_EnumType:
-          m_Identification: SpawnMonsterBlockNode+MonsterType, Assembly-CSharp-Editor,
-            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 9097120020836385179
-      type: {class: 'Constant`1[[UnityEngine.Transform[], UnityEngine.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: []
-    - rid: 9097120020836385180
-      type: {class: SpawnMonsterBlockNode, ns: , asm: Assembly-CSharp-Editor}
       data: 
     - rid: 9097120020836385181
       type: {class: UserBlockNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
@@ -744,7 +744,7 @@ MonoBehaviour:
     - rid: 9097120020836385182
       type: {class: 'Constant`1[[System.Int32, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
-        m_Value: 1
+        m_Value: 500
     - rid: 9097120020836385183
       type: {class: 'Constant`1[[System.Int32, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
@@ -829,7 +829,7 @@ MonoBehaviour:
     - rid: 9097120020836385188
       type: {class: 'Constant`1[[ActionGraphAsset, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
-        m_Value: {fileID: 11400000, guid: 073733ee1d046d94fbd9ff9cb53c1db6, type: 2}
+        m_Value: {fileID: 0}
     - rid: 9097120020836385189
       type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:

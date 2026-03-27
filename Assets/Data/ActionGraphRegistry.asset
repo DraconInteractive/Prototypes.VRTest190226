@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ActionGraphRegistry
   m_EditorClassIdentifier: Assembly-CSharp::ActionGraphRegistry
   Graphs:
+  - {fileID: 11400000, guid: 073733ee1d046d94fbd9ff9cb53c1db6, type: 2}
   - {fileID: 11400000, guid: dd664e6ad96a51546898c657913e8f10, type: 2}
