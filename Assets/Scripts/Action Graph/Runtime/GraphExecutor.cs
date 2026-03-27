@@ -1,11 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class GraphExecutor : MonoBehaviour
 {
     public ActionGraphAsset GraphAsset;
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return ActionGraphManager.EnsureLoaded();
         Execute();
     }
 

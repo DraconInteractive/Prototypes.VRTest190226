@@ -3,12 +3,15 @@ using System.IO;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
 [ScriptedImporter(1, ActionGraph.AssetExtension)]
 public class ActionGraphImporter : ScriptedImporter
 {
+    private const string RegistryPath = "Assets/Data/ActionGraphRegistry.asset";
+
     public override void OnImportAsset(AssetImportContext ctx)
     {
         var graph = GraphDatabase.LoadGraphForImporter<ActionGraph>(ctx.assetPath);
@@ -81,9 +84,7 @@ public class ActionGraphImporter : ScriptedImporter
                     var targetRT = nodeMap[connection.GetNode()];
                     var targetRTPort = targetRT.Inputs.First(x => x.Name == connection.name);
 
-                    // Output port stores a connection pointing to the input port's node+name
                     rtOutputPort.Connections.Add($"{targetRT.NodeId}__{targetRTPort.Name}");
-                    // Input port stores a connection pointing back to this output port's node+name
                     targetRTPort.Connections.Add($"{rt.NodeId}__{rtOutputPort.Name}");
                 }
             }
@@ -93,22 +94,61 @@ public class ActionGraphImporter : ScriptedImporter
 
         var eGraphName = Path.GetFileName(ctx.assetPath);
         var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath) + "_rt";
-        var path = ctx.assetPath.Replace(eGraphName, assetName + ".asset");
-
+        var assetPath = ctx.assetPath.Replace(eGraphName, assetName + ".asset");
         var serialized = runtimeGraph.Serialize();
 
-        var existing = AssetDatabase.LoadAssetAtPath<ActionGraphAsset>(path);
-        if (existing != null)
+        // Create or update the ActionGraphAsset
+        var graphAsset = AssetDatabase.LoadAssetAtPath<ActionGraphAsset>(assetPath);
+        if (graphAsset != null)
         {
-            existing.SerializedGraph = serialized;
-            EditorUtility.SetDirty(existing);
+            graphAsset.SerializedGraph = serialized;
+            EditorUtility.SetDirty(graphAsset);
         }
         else
         {
-            var graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
+            graphAsset = ScriptableObject.CreateInstance<ActionGraphAsset>();
             graphAsset.name = assetName;
             graphAsset.SerializedGraph = serialized;
-            AssetDatabase.CreateAsset(graphAsset, path);
+            AssetDatabase.CreateAsset(graphAsset, assetPath);
         }
+
+        RegisterInRegistry(graphAsset);
+    }
+
+    private static void RegisterInRegistry(ActionGraphAsset graphAsset)
+    {
+        // Find or create the registry
+        var registry = AssetDatabase.LoadAssetAtPath<ActionGraphRegistry>(RegistryPath);
+        if (registry == null)
+        {
+            registry = ScriptableObject.CreateInstance<ActionGraphRegistry>();
+            AssetDatabase.CreateAsset(registry, RegistryPath);
+        }
+
+        // Add to registry if not already present
+        if (registry.Graphs.All(g => g.name != graphAsset.name))
+        {
+            registry.Graphs.Add(graphAsset);
+            EditorUtility.SetDirty(registry);
+        }
+
+        // Defer Addressables registration — CreateOrMoveEntry internally calls
+        // SerializeState → AssetDatabase.SaveAssets, which is restricted during import.
+        EditorApplication.delayCall += EnsureRegistryAddressable;
+    }
+
+    private static void EnsureRegistryAddressable()
+    {
+        var addressableSettings = AddressableAssetSettingsDefaultObject.Settings;
+        if (addressableSettings == null)
+        {
+            Debug.LogWarning("ActionGraphImporter: Addressable Asset Settings not found. Create an Addressables configuration to enable runtime graph loading.");
+            return;
+        }
+
+        var guid = AssetDatabase.AssetPathToGUID(RegistryPath);
+        var entry = addressableSettings.FindAssetEntry(guid)
+            ?? addressableSettings.CreateOrMoveEntry(guid, addressableSettings.DefaultGroup);
+        entry.address = ActionGraphManager.RegistryAddress;
     }
 }
