@@ -88,14 +88,22 @@ public abstract class BaseRTNode
                 return false;
             }
 
-            value = (T)upstreamPort.Value;
+            value = ConvertValue<T>(upstreamPort.Value);
             return true;
         }
         else
         {
-            value = (T)inputPort.Value;
+            value = ConvertValue<T>(inputPort.Value);
             return true;
         }
+    }
+
+    private static T ConvertValue<T>(object raw)
+    {
+        var t = typeof(T);
+        if (t.IsEnum)
+            return (T)Enum.ToObject(t, raw);
+        return (T)Convert.ChangeType(raw, t);
     }
 
     protected bool TrySetOutput<T>(string portName, T value)
@@ -136,4 +144,14 @@ public class Port
         get => _type ??= TypeName != null ? Type.GetType(TypeName) : null;
         set { _type = value; TypeName = value?.AssemblyQualifiedName; }
     }
+}
+
+public abstract class BaseContextRTNode : BaseRTNode
+{
+    public List<string> BlockIds = new();
+}
+
+public abstract class BaseBlockRTNode : BaseRTNode
+{
+    public string ContextNodeID;
 }

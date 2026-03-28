@@ -45,7 +45,7 @@ public class ActionGraphImporter : ScriptedImporter
             rt.NodeId = (nextId++).ToString();
             nodeMap[node] = rt;
 
-            if (node is ContextNode ctxNode)
+            if (node is ContextNode ctxNode && rt is BaseContextRTNode ctxRTNode)
             {
                 var blocks = ctxNode.blockNodes.ToList();
                 foreach (var block in blocks)
@@ -55,6 +55,12 @@ public class ActionGraphImporter : ScriptedImporter
                         : new FallbackRTNode();
                     blockRT.NodeId = (nextId++).ToString();
                     nodeMap[block] = blockRT;
+
+                    if (blockRT is BaseBlockRTNode blockRTNode)
+                    {
+                        blockRTNode.ContextNodeID = ctxRTNode.NodeId;
+                        ctxRTNode.BlockIds.Add(blockRTNode.NodeId);
+                    }
                 }
             }
         }
@@ -190,9 +196,7 @@ public class ActionGraphImporter : ScriptedImporter
             registry = ScriptableObject.CreateInstance<ActionGraphRegistry>();
             AssetDatabase.CreateAsset(registry, RegistryPath);
         }
-
-        //registry.Graphs.RemoveAll(x => x == null);
-
+        
         // Add to registry if not already present
         if (registry.Graphs.All(g => g.name != graphAsset.name))
         {

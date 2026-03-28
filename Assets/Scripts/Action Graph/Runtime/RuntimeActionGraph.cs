@@ -55,6 +55,12 @@ public class RuntimeActionGraph
         {
             var nodeClone = (BaseRTNode)Activator.CreateInstance(node.GetType());
             nodeClone.NodeId = node.NodeId;
+            
+            if (node is BaseContextRTNode ctxNode && nodeClone is BaseContextRTNode ctxClone)
+                ctxClone.BlockIds = new List<string>(ctxNode.BlockIds);
+            if (node is BaseBlockRTNode blockNode && nodeClone is BaseBlockRTNode blockClone)
+                blockClone.ContextNodeID = blockNode.ContextNodeID;
+            
             nodeClone.Inputs = node.Inputs.Select(p => new Port
             {
                 Name = p.Name,
