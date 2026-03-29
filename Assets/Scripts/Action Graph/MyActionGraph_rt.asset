@@ -15,41 +15,6 @@ MonoBehaviour:
   SerializedGraph: "{\r\n  \"Nodes\": [\r\n    {\r\n      \"$type\": \"StartRTNode,
     Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [],\r\n     
     \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
-    \"0\",\r\n          \"Connections\": [\r\n            \"1__Exec\"\r\n         
-    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
-    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"SpawnWaveRTNode,
-    Assembly-CSharp\",\r\n      \"BlockIds\": [\r\n        \"2\",\r\n        \"3\"\r\n     
-    ],\r\n      \"NodeId\": \"1\",\r\n      \"Inputs\": [\r\n        {\r\n         
-    \"Name\": \"Exec\",\r\n          \"NodeId\": \"1\",\r\n          \"Connections\":
-    [\r\n            \"0__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
-    \"Value\": null\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
-    \"Name\": \"Exec\",\r\n          \"NodeId\": \"1\",\r\n          \"Connections\":
-    [],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n       
-    }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"SpawnMonsterRTBlockNode,
-    Assembly-CSharp\",\r\n      \"ContextNodeID\": \"1\",\r\n      \"NodeId\": \"2\",\r\n     
-    \"Inputs\": [\r\n        {\r\n          \"Name\": \"Count\",\r\n          \"NodeId\":
-    \"2\",\r\n          \"Connections\": [],\r\n          \"TypeName\": \"System.Int32,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
-    \"Value\": 5\r\n        },\r\n        {\r\n          \"Name\": \"Prefab\",\r\n         
-    \"NodeId\": \"2\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"SpawnMonsterRTBlockNode+MonsterType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-    PublicKeyToken=null\",\r\n          \"Value\": 1\r\n        },\r\n        {\r\n         
-    \"Name\": \"Spawn Points\",\r\n          \"NodeId\": \"2\",\r\n          \"Connections\":
-    [],\r\n          \"TypeName\": \"UnityEngine.Transform[], UnityEngine.CoreModule,
-    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
-    {\r\n            \"$type\": \"UnityEngine.Transform[], UnityEngine.CoreModule\",\r\n           
-    \"$values\": []\r\n          }\r\n        }\r\n      ],\r\n      \"Outputs\":
-    [],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"RewardBlockRTNode,
-    Assembly-CSharp\",\r\n      \"ContextNodeID\": \"1\",\r\n      \"NodeId\": \"3\",\r\n     
-    \"Inputs\": [\r\n        {\r\n          \"Name\": \"Gold\",\r\n          \"NodeId\":
-    \"3\",\r\n          \"Connections\": [],\r\n          \"TypeName\": \"System.Int32,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
-    \"Value\": 345\r\n        },\r\n        {\r\n          \"Name\": \"XP\",\r\n         
-    \"NodeId\": \"3\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
-    \"Value\": 234\r\n        },\r\n        {\r\n          \"Name\": \"Items\",\r\n         
-    \"NodeId\": \"3\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"UnityEngine.GameObject[], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-    PublicKeyToken=null\",\r\n          \"Value\": {\r\n            \"$type\": \"UnityEngine.GameObject[],
-    UnityEngine.CoreModule\",\r\n            \"$values\": []\r\n          }\r\n       
-    }\r\n      ],\r\n      \"Outputs\": [],\r\n      \"State\": 0\r\n    }\r\n  ]\r\n}"
+    \"0\",\r\n          \"Connections\": [],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n 
+    ]\r\n}"

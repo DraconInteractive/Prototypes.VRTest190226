@@ -198,6 +198,7 @@ public class ActionGraphImporter : ScriptedImporter
         }
         
         // Add to registry if not already present
+        registry.Graphs.RemoveAll(g => g == null);
         if (registry.Graphs.All(g => g.name != graphAsset.name))
         {
             registry.Graphs.Add(graphAsset);
