@@ -1,15 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ForeachRTNode : BaseLoopRTNode
+public class ForRTNode : BaseLoopRTNode
 {
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        if (!TryGetInput<object[]>("Array", graph, out var values))
+        if (!TryGetInput<int>("Count", graph, out var count))
         {
-            Debug.LogError("No array provided to foreach node");
+            Debug.LogError("No count provided to for node");
             SetFailed();
             return;
         }
@@ -22,17 +21,17 @@ public class ForeachRTNode : BaseLoopRTNode
         }
 
         graph.ResolveInputConnection(loopPort.Connections[0], out var firstLoopNode, out _);
-        graph.CoroutineRunner.StartCoroutine(RunLoop(graph, values, firstLoopNode));
+        graph.CoroutineRunner.StartCoroutine(RunLoop(graph, count, firstLoopNode));
     }
 
-    private IEnumerator RunLoop(RuntimeActionGraph graph, object[] values, BaseRTNode firstLoopNode)
+    private IEnumerator RunLoop(RuntimeActionGraph graph, int count, BaseRTNode firstLoopNode)
     {
-        foreach (var element in values)
+        for (int i = 0; i < count; i++)
         {
             foreach (var id in LoopBodyNodeIds)
                 graph.GetNodeById(id)?.Reset(graph);
 
-            TrySetOutput("Element", element);
+            TrySetOutput("Element", i);
             firstLoopNode.Execute(graph);
 
             yield return new WaitUntil(() => LoopBodyNodeIds.All(id =>

@@ -63,8 +63,8 @@ public class RuntimeActionGraph
                 ctxClone.BlockIds = new List<string>(ctxNode.BlockIds);
             if (node is BaseBlockRTNode blockNode && nodeClone is BaseBlockRTNode blockClone)
                 blockClone.ContextNodeID = blockNode.ContextNodeID;
-            if (node is ForeachRTNode fn && nodeClone is ForeachRTNode fnClone)
-                fnClone.LoopBodyNodeIds = new List<string>(fn.LoopBodyNodeIds);
+            if (node is BaseLoopRTNode loopNode && nodeClone is BaseLoopRTNode loopClone)
+                loopClone.LoopBodyNodeIds = new List<string>(loopNode.LoopBodyNodeIds);
             
             nodeClone.Inputs = node.Inputs.Select(p => new Port
             {

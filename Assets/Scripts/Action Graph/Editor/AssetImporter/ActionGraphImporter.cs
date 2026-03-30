@@ -164,8 +164,8 @@ public class ActionGraphImporter : ScriptedImporter
 
         runtimeGraph.Nodes = nodeMap.Values.ToList();
 
-        // Pass 4: populate LoopBodyNodeIds for foreach nodes
-        foreach (var node in runtimeGraph.Nodes.OfType<ForeachRTNode>())
+        // Pass 4: populate LoopBodyNodeIds for loop nodes
+        foreach (var node in runtimeGraph.Nodes.OfType<BaseLoopRTNode>())
         {
             var loopPort = node.Outputs.FirstOrDefault(p => p.Name == "Loop");
             if (loopPort == null || loopPort.Connections.Count == 0) continue;

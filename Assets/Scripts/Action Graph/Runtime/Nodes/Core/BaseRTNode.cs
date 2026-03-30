@@ -172,3 +172,15 @@ public abstract class BaseBlockRTNode : BaseRTNode
 {
     public string ContextNodeID;
 }
+
+public abstract class BaseLoopRTNode : BaseRTNode
+{
+    public List<string> LoopBodyNodeIds = new();
+
+    public override void Reset(RuntimeActionGraph graph)
+    {
+        base.Reset(graph);
+        foreach (var id in LoopBodyNodeIds)
+            graph.GetNodeById(id)?.Reset(graph);
+    }
+}
