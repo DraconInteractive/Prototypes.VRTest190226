@@ -164,6 +164,41 @@ public class ActionGraphImporter : ScriptedImporter
 
         runtimeGraph.Nodes = nodeMap.Values.ToList();
 
+        // Pass 4: populate LoopBodyNodeIds for foreach nodes
+        foreach (var node in runtimeGraph.Nodes.OfType<ForeachRTNode>())
+        {
+            var loopPort = node.Outputs.FirstOrDefault(p => p.Name == "Loop");
+            if (loopPort == null || loopPort.Connections.Count == 0) continue;
+
+            var visited = new HashSet<string>();
+            var queue = new Queue<string>();
+
+            runtimeGraph.ResolveInputConnection(loopPort.Connections[0], out var seed, out _);
+            if (seed != null) queue.Enqueue(seed.NodeId);
+
+            while (queue.Count > 0)
+            {
+                var id = queue.Dequeue();
+                if (!visited.Add(id)) continue;
+
+                var n = runtimeGraph.GetNodeById(id);
+                if (n == null) continue;
+
+                var execOut = n.Outputs.FirstOrDefault(p => p.Name == "Exec");
+                if (execOut != null)
+                {
+                    foreach (var conn in execOut.Connections)
+                    {
+                        runtimeGraph.ResolveInputConnection(conn, out var next, out _);
+                        if (next != null && !visited.Contains(next.NodeId))
+                            queue.Enqueue(next.NodeId);
+                    }
+                }
+            }
+
+            node.LoopBodyNodeIds = visited.ToList();
+        }
+
         var eGraphName = Path.GetFileName(ctx.assetPath);
         var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath) + "_rt";
         var assetPath = ctx.assetPath.Replace(eGraphName, assetName + ".asset");

@@ -9,6 +9,9 @@ public class RuntimeActionGraph
 {
     public List<BaseRTNode> Nodes = new();
 
+    [JsonIgnore]
+    public MonoBehaviour CoroutineRunner;
+
     private static readonly JsonSerializerSettings JsonSettings = new()
     {
         TypeNameHandling = TypeNameHandling.Auto,
@@ -60,6 +63,8 @@ public class RuntimeActionGraph
                 ctxClone.BlockIds = new List<string>(ctxNode.BlockIds);
             if (node is BaseBlockRTNode blockNode && nodeClone is BaseBlockRTNode blockClone)
                 blockClone.ContextNodeID = blockNode.ContextNodeID;
+            if (node is ForeachRTNode fn && nodeClone is ForeachRTNode fnClone)
+                fnClone.LoopBodyNodeIds = new List<string>(fn.LoopBodyNodeIds);
             
             nodeClone.Inputs = node.Inputs.Select(p => new Port
             {
@@ -90,6 +95,11 @@ public class RuntimeActionGraph
         {
             Debug.LogError($"RuntimeActionGraph has no StartRTNode. Nodes: {Nodes.Count}");
             return;
+        }
+
+        if (CoroutineRunner == null)
+        {
+            Debug.LogWarning("No coroutine runner fed to execution. Async functionality may fail.");
         }
         startNode.Execute(this);
     }

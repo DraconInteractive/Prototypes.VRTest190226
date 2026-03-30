@@ -1,6 +1,7 @@
 ﻿using System;
 using Unity.GraphToolkit.Editor;
 
+[Serializable]
 public class ForeachNode : Node, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)

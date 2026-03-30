@@ -22,6 +22,7 @@ public class GraphExecutor : MonoBehaviour
         }
 
         _activeGraph = GraphAsset.Provision();
+        _activeGraph.CoroutineRunner = this;
         _activeGraph.Execute();
     }
 }

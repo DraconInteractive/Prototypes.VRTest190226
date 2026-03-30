@@ -33,6 +33,8 @@ public abstract class BaseRTNode
     protected void SetComplete() => _state = NodeState.Complete;
     protected void SetFailed() => _state = NodeState.Failed;
 
+    public virtual void Reset(RuntimeActionGraph graph) => _state = NodeState.Idle;
+
     protected Port GetInputPort(string name) => Inputs.FirstOrDefault(x => x.Name == name);
     protected Port GetOutputPort(string name) => Outputs.FirstOrDefault(x => x.Name == name);
 
