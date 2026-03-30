@@ -9,10 +9,11 @@ public class ForeachNode : Node, IEditorNode
         context.AddInputPort<object[]>("Array");
         context.AddOutputPort("Exec");
         context.AddOutputPort("Loop");
+        context.AddOutputPort<object>("Element");
     }
 
     public BaseRTNode CreateRuntimeType()
     {
-        return new FallbackRTNode();
+        return new ForeachRTNode();
     }
 }

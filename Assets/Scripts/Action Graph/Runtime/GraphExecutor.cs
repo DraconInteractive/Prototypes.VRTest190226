@@ -5,6 +5,8 @@ public class GraphExecutor : MonoBehaviour
 {
     public ActionGraphAsset GraphAsset;
 
+    private RuntimeActionGraph _activeGraph;
+    
     private IEnumerator Start()
     {
         yield return ActionGraphManager.EnsureLoaded();
@@ -19,6 +21,7 @@ public class GraphExecutor : MonoBehaviour
             return;
         }
 
-        GraphAsset.Provision().Execute();
+        _activeGraph = GraphAsset.Provision();
+        _activeGraph.Execute();
     }
 }

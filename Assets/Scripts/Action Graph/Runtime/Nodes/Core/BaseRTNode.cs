@@ -55,13 +55,6 @@ public abstract class BaseRTNode
             return false;
         }
 
-        if (inputPort.Type != typeof(T))
-        {
-            Debug.LogError($"Tried to get value on input port {portName} on node ({GetType().FullName}), but requested type ({typeof(T).FullName}) does not match port type ({inputPort.Type.FullName})");
-            value = default;
-            return false;
-        }
-
         if (inputPort.Connections.Count > 0)
         {
             // Only ever follow the first connection if multiple exist
@@ -88,22 +81,43 @@ public abstract class BaseRTNode
                 return false;
             }
 
-            value = ConvertValue<T>(upstreamPort.Value);
-            return true;
+            return TryConvertValue(upstreamPort.Value, portName, out value);
         }
         else
         {
-            value = ConvertValue<T>(inputPort.Value);
-            return true;
+            if (inputPort.Value == null)
+            {
+                value = default;
+                return true; // null is a valid unset default
+            }
+            return TryConvertValue(inputPort.Value, portName, out value);
         }
     }
 
-    private static T ConvertValue<T>(object raw)
+    private bool TryConvertValue<T>(object raw, string portName, out T value)
     {
-        var t = typeof(T);
-        if (t.IsEnum)
-            return (T)Enum.ToObject(t, raw);
-        return (T)Convert.ChangeType(raw, t);
+        // Direct type match or subtype — no conversion needed
+        if (raw is T direct)
+        {
+            value = direct;
+            return true;
+        }
+
+        // Attempt conversion (handles numeric coercions, string parsing, etc.)
+        try
+        {
+            var t = typeof(T);
+            value = t.IsEnum
+                ? (T)Enum.ToObject(t, raw)
+                : (T)Convert.ChangeType(raw, t);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Port '{portName}' on ({GetType().FullName}): could not convert value of type {raw.GetType().Name} to {typeof(T).Name}. {e.Message}");
+            value = default;
+            return false;
+        }
     }
 
     protected bool TrySetOutput<T>(string portName, T value)
@@ -115,9 +129,10 @@ public abstract class BaseRTNode
             return false;
         }
 
-        if (outputPort.Type != typeof(T))
+        // Allow writing T to a port declared as a base type (e.g. string to an object port)
+        if (outputPort.Type != null && !outputPort.Type.IsAssignableFrom(typeof(T)))
         {
-            Debug.LogError($"Tried to set value on output port {portName} on node ({GetType().FullName}), but requested type ({typeof(T).FullName}) does not match port type ({outputPort.Type.FullName})");
+            Debug.LogError($"Tried to set value on output port {portName} on node ({GetType().FullName}), but type {typeof(T).Name} is not assignable to port type {outputPort.Type.Name}");
             return false;
         }
 
