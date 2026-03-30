@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,8 +6,10 @@ public class GraphExecutor : MonoBehaviour
 {
     public ActionGraphAsset GraphAsset;
 
+    public event Action<string> OnTrigger;
+
     private RuntimeActionGraph _activeGraph;
-    
+
     private IEnumerator Start()
     {
         yield return ActionGraphManager.EnsureLoaded();
@@ -23,6 +26,7 @@ public class GraphExecutor : MonoBehaviour
 
         _activeGraph = GraphAsset.Provision();
         _activeGraph.CoroutineRunner = this;
+        _activeGraph.OnTrigger = id => OnTrigger?.Invoke(id);
         _activeGraph.Execute();
     }
 }

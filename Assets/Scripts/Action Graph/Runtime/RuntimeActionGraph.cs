@@ -12,6 +12,9 @@ public class RuntimeActionGraph
     [JsonIgnore]
     public MonoBehaviour CoroutineRunner;
 
+    [JsonIgnore]
+    public Action<string> OnTrigger;
+
     private static readonly JsonSerializerSettings JsonSettings = new()
     {
         TypeNameHandling = TypeNameHandling.Auto,
@@ -26,7 +29,7 @@ public class RuntimeActionGraph
 
     public BaseRTNode GetNodeById(string id) =>
         Nodes.FirstOrDefault(n => n.NodeId == id);
-
+    
     // Resolves a connection string stored on an input port → finds the upstream node and its output port.
     public void ResolveOutputConnection(string connection, out BaseRTNode node, out Port port)
     {
