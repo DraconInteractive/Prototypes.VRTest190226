@@ -1,5 +1,7 @@
-﻿using Unity.GraphToolkit.Editor;
+﻿using System;
+using Unity.GraphToolkit.Editor;
 
+[Serializable]
 public class FindBowNode : Node, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)

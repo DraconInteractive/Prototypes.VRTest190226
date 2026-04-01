@@ -1,11 +1,13 @@
-﻿using Unity.GraphToolkit.Editor;
+﻿using System;
+using Unity.GraphToolkit.Editor;
 
-public class WhileNode : Node, IEditorNode
+[Serializable]
+public class WhileNode : BaseActionNode, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
-        context.AddInputPort("Exec");
-        context.AddOutputPort("Exec");
+        base.OnDefinePorts(context);
+        
         context.AddInputPort<bool>("Condition");
         context.AddOutputPort("Loop");
     }

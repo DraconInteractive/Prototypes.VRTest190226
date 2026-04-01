@@ -2,13 +2,12 @@
 using Unity.GraphToolkit.Editor;
 
 [Serializable]
-public class ForeachNode : Node, IEditorNode
+public class ForeachNode : BaseActionNode, IEditorNode
 {
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
-        context.AddInputPort("Exec");
+        base.OnDefinePorts(context);
         context.AddInputPort<object[]>("Array");
-        context.AddOutputPort("Exec");
         context.AddOutputPort("Loop");
         context.AddOutputPort<object>("Element");
     }
