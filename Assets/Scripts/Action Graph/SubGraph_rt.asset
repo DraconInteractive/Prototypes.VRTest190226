@@ -15,16 +15,6 @@ MonoBehaviour:
   SerializedGraph: "{\r\n  \"Nodes\": [\r\n    {\r\n      \"$type\": \"StartRTNode,
     Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [],\r\n     
     \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
-    \"0\",\r\n          \"Connections\": [\r\n            \"1__Exec\"\r\n         
-    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
-    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"DebugLogRTNode,
-    Assembly-CSharp\",\r\n      \"NodeId\": \"1\",\r\n      \"Inputs\": [\r\n       
-    {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"1\",\r\n         
-    \"Connections\": [\r\n            \"0__Exec\"\r\n          ],\r\n          \"TypeName\":
-    null,\r\n          \"Value\": null\r\n        },\r\n        {\r\n          \"Name\":
-    \"Message\",\r\n          \"NodeId\": \"1\",\r\n          \"Connections\": [],\r\n         
-    \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
-    \"Value\": \"Executing sub node\"\r\n        }\r\n      ],\r\n      \"Outputs\":
-    [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"1\",\r\n         
-    \"Connections\": [],\r\n          \"TypeName\": null,\r\n          \"Value\":
-    null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n  ]\r\n}"
+    \"0\",\r\n          \"Connections\": [],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n 
+    ]\r\n}"

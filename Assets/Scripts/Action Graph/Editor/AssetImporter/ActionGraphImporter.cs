@@ -3,14 +3,13 @@ using System.IO;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
 using UnityEditor;
-using UnityEditor.AddressableAssets;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
 [ScriptedImporter(1, ActionGraph.AssetExtension)]
 public class ActionGraphImporter : ScriptedImporter
 {
-    private const string RegistryPath = "Assets/Data/ActionGraphRegistry.asset";
+    private const string RegistryPath = "Assets/Resources/ActionGraphRegistry.asset";
 
     public override void OnImportAsset(AssetImportContext ctx)
     {
@@ -240,23 +239,5 @@ public class ActionGraphImporter : ScriptedImporter
             EditorUtility.SetDirty(registry);
         }
 
-        // Defer Addressables registration — CreateOrMoveEntry internally calls
-        // SerializeState → AssetDatabase.SaveAssets, which is restricted during import.
-        EditorApplication.delayCall += EnsureRegistryAddressable;
-    }
-
-    private static void EnsureRegistryAddressable()
-    {
-        var addressableSettings = AddressableAssetSettingsDefaultObject.Settings;
-        if (addressableSettings == null)
-        {
-            Debug.LogWarning("ActionGraphImporter: Addressable Asset Settings not found. Create an Addressables configuration to enable runtime graph loading.");
-            return;
-        }
-
-        var guid = AssetDatabase.AssetPathToGUID(RegistryPath);
-        var entry = addressableSettings.FindAssetEntry(guid)
-            ?? addressableSettings.CreateOrMoveEntry(guid, addressableSettings.DefaultGroup);
-        entry.address = ActionGraphManager.RegistryAddress;
     }
 }
