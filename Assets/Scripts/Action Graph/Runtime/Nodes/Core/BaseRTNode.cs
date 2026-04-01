@@ -24,6 +24,7 @@ public abstract class BaseRTNode
 
     public void Execute(RuntimeActionGraph graph)
     {
+        graph.PrintDebug(this, "Executing");
         _state = NodeState.Running;
         ExecuteInternal(graph);
     }
@@ -31,6 +32,7 @@ public abstract class BaseRTNode
     protected abstract void ExecuteInternal(RuntimeActionGraph graph);
 
     protected void SetComplete() => _state = NodeState.Complete;
+    
     protected void SetFailed() => _state = NodeState.Failed;
 
     public virtual void Reset(RuntimeActionGraph graph) => _state = NodeState.Idle;
@@ -54,7 +56,7 @@ public abstract class BaseRTNode
         var inputPort = Inputs.FirstOrDefault(x => x.Name == portName);
         if (inputPort == null)
         {
-            Debug.LogError($"Tried to get value on input port {portName}, but it doesn't exist on node ({GetType().FullName})");
+            graph.PrintDebugError(this, $"Cannot find port {portName} on node");
             value = default;
             return false;
         }

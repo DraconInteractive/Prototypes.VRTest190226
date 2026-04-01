@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: MyActionGraph_rt
   m_EditorClassIdentifier: Assembly-CSharp::ActionGraphAsset
   SerializedGraph: "{\r\n  \"Nodes\": [\r\n    {\r\n      \"$type\": \"StartRTNode,
-    Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [],\r\n     
-    \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
-    \"0\",\r\n          \"Connections\": [\r\n            \"5__Exec\"\r\n         
+    Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Debug?\",\r\n          \"NodeId\": \"0\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.Boolean, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": true\r\n       
+    }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"0\",\r\n          \"Connections\": [\r\n            \"8__Exec\"\r\n         
     ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
     ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"FindBowRTNode,
     Assembly-CSharp\",\r\n      \"NodeId\": \"1\",\r\n      \"Inputs\": [],\r\n     
@@ -36,7 +39,7 @@ MonoBehaviour:
     {\r\n      \"$type\": \"WhileRTNode, Assembly-CSharp\",\r\n      \"LoopBodyNodeIds\":
     [],\r\n      \"NodeId\": \"3\",\r\n      \"Inputs\": [\r\n        {\r\n         
     \"Name\": \"Exec\",\r\n          \"NodeId\": \"3\",\r\n          \"Connections\":
-    [\r\n            \"7__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    [\r\n            \"10__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
     \"Value\": null\r\n        },\r\n        {\r\n          \"Name\": \"Condition\",\r\n         
     \"NodeId\": \"3\",\r\n          \"Connections\": [\r\n            \"4__Out\"\r\n         
     ],\r\n          \"TypeName\": \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
@@ -56,37 +59,143 @@ MonoBehaviour:
     [\r\n            \"3__Condition\"\r\n          ],\r\n          \"TypeName\":
     \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
     \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
-    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
-    \"5\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
-    \"NodeId\": \"5\",\r\n          \"Connections\": [\r\n            \"0__Exec\"\r\n         
-    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
-    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"5\",\r\n         
-    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
-    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Lights
-    - In\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    {\r\n      \"$type\": \"PlayBasicVoiceOverRTNode, Assembly-CSharp\",\r\n     
+    \"NodeId\": \"5\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\":
+    \"Exec\",\r\n          \"NodeId\": \"5\",\r\n          \"Connections\": [\r\n           
+    \"7__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n          \"Value\":
+    null\r\n        },\r\n        {\r\n          \"Name\": \"Speaker\",\r\n         
+    \"NodeId\": \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    PublicKeyToken=null\",\r\n          \"Value\": 1\r\n        },\r\n        {\r\n         
+    \"Name\": \"Clip\",\r\n          \"NodeId\": \"5\",\r\n          \"Connections\":
+    [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
+    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
+    \"length\": 1.802449,\r\n            \"samples\": 79488,\r\n            \"channels\":
+    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
+    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
+    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
+    0,\r\n            \"name\": \"VO_WelcomeToTheVoid\",\r\n            \"hideFlags\":
+    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
+    \"NodeId\": \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
+    \"NodeId\": \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
     \"Name\": \"Exec\",\r\n          \"NodeId\": \"5\",\r\n          \"Connections\":
-    [\r\n            \"6__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    [\r\n            \"11__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
     \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
-    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
-    \"6\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
-    \"NodeId\": \"6\",\r\n          \"Connections\": [\r\n            \"5__Exec\"\r\n         
-    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
-    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"6\",\r\n         
-    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
-    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Play
-    VO\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
-    \"Name\": \"Exec\",\r\n          \"NodeId\": \"6\",\r\n          \"Connections\":
-    [\r\n            \"7__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
-    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
-    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
-    \"7\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
-    \"NodeId\": \"7\",\r\n          \"Connections\": [\r\n            \"6__Exec\"\r\n         
-    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
-    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"7\",\r\n         
-    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
-    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Grab
-    UI\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    {\r\n      \"$type\": \"FindGameObjectByNameRTNode, Assembly-CSharp\",\r\n     
+    \"NodeId\": \"6\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\":
+    \"Name\",\r\n          \"NodeId\": \"6\",\r\n          \"Connections\": [],\r\n         
+    \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": \"Spotlight01\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n       
+    {\r\n          \"Name\": \"Object\",\r\n          \"NodeId\": \"6\",\r\n         
+    \"Connections\": [\r\n            \"7__Object\"\r\n          ],\r\n         
+    \"TypeName\": \"UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\": null\r\n       
+    }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"ToggleGameObjectRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"7\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"7\",\r\n         
+    \"Connections\": [\r\n            \"8__Exec\"\r\n          ],\r\n          \"TypeName\":
+    null,\r\n          \"Value\": null\r\n        },\r\n        {\r\n          \"Name\":
+    \"Object\",\r\n          \"NodeId\": \"7\",\r\n          \"Connections\": [\r\n           
+    \"6__Object\"\r\n          ],\r\n          \"TypeName\": \"UnityEngine.GameObject,
+    UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n         
+    \"Value\": null\r\n        },\r\n        {\r\n          \"Name\": \"State\",\r\n         
+    \"NodeId\": \"7\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
     \"Name\": \"Exec\",\r\n          \"NodeId\": \"7\",\r\n          \"Connections\":
-    [\r\n            \"3__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    [\r\n            \"5__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"WaitForSecondsRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
+    \"8\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"8\",\r\n          \"Connections\": [\r\n            \"0__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Seconds\",\r\n          \"NodeId\": \"8\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.Single, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": 3.0\r\n       
+    }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"8\",\r\n          \"Connections\": [\r\n            \"7__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
+    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"FindGameObjectByNameRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"9\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Name\",\r\n          \"NodeId\": \"9\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"GrabUI\"\r\n       
+    }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"Object\",\r\n         
+    \"NodeId\": \"9\",\r\n          \"Connections\": [\r\n            \"10__Object\"\r\n         
+    ],\r\n          \"TypeName\": \"UnityEngine.GameObject, UnityEngine.CoreModule,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
+    null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n     
+    \"$type\": \"ToggleGameObjectRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
+    \"10\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"10\",\r\n          \"Connections\": [\r\n            \"12__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Object\",\r\n          \"NodeId\": \"10\",\r\n         
+    \"Connections\": [\r\n            \"9__Object\"\r\n          ],\r\n         
+    \"TypeName\": \"UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\": null\r\n       
+    },\r\n        {\r\n          \"Name\": \"State\",\r\n          \"NodeId\": \"10\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.Boolean, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": true\r\n       
+    }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"10\",\r\n          \"Connections\": [\r\n            \"3__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
+    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"PlayBasicVoiceOverRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"11\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\": \"11\",\r\n         
+    \"Connections\": [\r\n            \"5__Exec\"\r\n          ],\r\n          \"TypeName\":
+    null,\r\n          \"Value\": null\r\n        },\r\n        {\r\n          \"Name\":
+    \"Speaker\",\r\n          \"NodeId\": \"11\",\r\n          \"Connections\": [],\r\n         
+    \"TypeName\": \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\": 1\r\n       
+    },\r\n        {\r\n          \"Name\": \"Clip\",\r\n          \"NodeId\": \"11\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
+    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
+    \"length\": 2.037551,\r\n            \"samples\": 89856,\r\n            \"channels\":
+    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
+    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
+    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
+    0,\r\n            \"name\": \"VO_YouHaveBeenSummoned\",\r\n            \"hideFlags\":
+    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
+    \"NodeId\": \"11\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
+    \"NodeId\": \"11\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"11\",\r\n          \"Connections\":
+    [\r\n            \"12__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"PlayBasicVoiceOverRTNode, Assembly-CSharp\",\r\n     
+    \"NodeId\": \"12\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\":
+    \"Exec\",\r\n          \"NodeId\": \"12\",\r\n          \"Connections\": [\r\n           
+    \"11__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n          \"Value\":
+    null\r\n        },\r\n        {\r\n          \"Name\": \"Speaker\",\r\n         
+    \"NodeId\": \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    PublicKeyToken=null\",\r\n          \"Value\": 1\r\n        },\r\n        {\r\n         
+    \"Name\": \"Clip\",\r\n          \"NodeId\": \"12\",\r\n          \"Connections\":
+    [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
+    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
+    \"length\": 5.25061226,\r\n            \"samples\": 231552,\r\n            \"channels\":
+    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
+    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
+    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
+    0,\r\n            \"name\": \"VO_WhyWhoKnows\",\r\n            \"hideFlags\":
+    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
+    \"NodeId\": \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
+    \"NodeId\": \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": true\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"12\",\r\n          \"Connections\":
+    [\r\n            \"10__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
     \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n 
-    ]\r\n}"
+    ],\r\n  \"ShowDebug\": false\r\n}"

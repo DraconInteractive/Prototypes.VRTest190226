@@ -8,7 +8,6 @@ public class ToStringRTNode : BaseRTNode
     {
         if (!TryGetInput("Target", graph, out object targetObj))
         {
-            Debug.LogError("No target provided to ToString node");
             SetFailed();
             return;
         }

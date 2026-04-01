@@ -9,7 +9,6 @@ public class ForeachRTNode : BaseLoopRTNode
     {
         if (!TryGetInput<object[]>("Array", graph, out var values))
         {
-            Debug.LogError("No array provided to foreach node");
             SetFailed();
             return;
         }

@@ -8,7 +8,6 @@ public class NotRTNode : BaseRTNode
     {
         if (!TryGetInput("In", graph, out bool input))
         {
-            Debug.LogError("Couldn't get input for Not node");
             SetFailed();
             return;
         }

@@ -9,6 +9,8 @@ public class RuntimeActionGraph
 {
     public List<BaseRTNode> Nodes = new();
 
+    public bool ShowDebug = false;
+    
     [JsonIgnore]
     public MonoBehaviour CoroutineRunner;
 
@@ -105,5 +107,17 @@ public class RuntimeActionGraph
             Debug.LogWarning("No coroutine runner fed to execution. Async functionality may fail.");
         }
         startNode.Execute(this);
+    }
+
+    public void PrintDebug(BaseRTNode node, string message)
+    {
+        if (!ShowDebug) return;
+        Debug.Log($"[{node.GetType().FullName}]: {message}");
+    }
+
+    public void PrintDebugError(BaseRTNode node, string message)
+    {
+        if (!ShowDebug) return;
+        Debug.LogError($"[{node.GetType().FullName}]: {message}");
     }
 }

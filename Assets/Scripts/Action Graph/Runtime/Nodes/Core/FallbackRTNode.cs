@@ -4,7 +4,7 @@ public class FallbackRTNode : BaseRTNode
 {
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        Debug.LogWarning("FallbackRTNode executed — no runtime implementation for this node type.");
+        graph.PrintDebug(this, "Fallback executed, review runtime implementation of this node");
         DefExecNext(graph);
     }
 }

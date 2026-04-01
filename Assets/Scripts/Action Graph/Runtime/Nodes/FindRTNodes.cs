@@ -10,7 +10,7 @@ public class FindGameObjectByNameRTNode : BaseRTNode
     {
         if (!TryGetInput<string>("Name", graph, out var nameStr))
         {
-            Debug.LogError("Cannot find name port on find go by name node");
+            SetFailed();
             return;
         }
         TrySetOutput("Object", GameObject.Find(nameStr));
@@ -24,7 +24,7 @@ public class FindGameObjectsByTagRTNode : BaseRTNode
     {
         if (!TryGetInput<string>("Tag", graph, out var tagStr))
         {
-            Debug.LogError("Cannot find tag port on find objects node");
+            SetFailed();
             return;
         }
         
@@ -48,7 +48,7 @@ public class FindTargetsByNameRTNode : BaseRTNode
     {
         if (!TryGetInput<string>("Name", graph, out var nameStr))
         {
-            Debug.LogError("Cannot find name port on find targets node");
+            SetFailed();
             return;
         }
         TrySetOutput("Targets", Target.All.Where(x => x.gameObject.name == nameStr));

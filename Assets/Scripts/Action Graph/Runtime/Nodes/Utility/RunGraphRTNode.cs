@@ -8,13 +8,7 @@ public class RunGraphRTNode : BaseRTNode
 
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        if (!TryGetInput<ActionGraphAsset>("Graph", graph, out var graphAsset))
-        {
-            SetFailed();
-            return;
-        }
-
-        if (!TryGetInput<bool>("Wait?", graph, out bool wait))
+        if (!TryGetInput<ActionGraphAsset>("Graph", graph, out var graphAsset) || !TryGetInput<bool>("Wait?", graph, out bool wait))
         {
             SetFailed();
             return;

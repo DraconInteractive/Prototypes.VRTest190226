@@ -90,8 +90,10 @@ MonoBehaviour:
           rid: -2
         m_State: 0
         m_InputConstantsById:
-          m_KeyList: []
-          m_ValueList: []
+          m_KeyList:
+          - Debug?
+          m_ValueList:
+          - rid: 9097120020836385302
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -110,3 +112,7 @@ MonoBehaviour:
     - rid: 2920746497389887752
       type: {class: StartNode, ns: , asm: Assembly-CSharp-Editor}
       data: 
+    - rid: 9097120020836385302
+      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 0

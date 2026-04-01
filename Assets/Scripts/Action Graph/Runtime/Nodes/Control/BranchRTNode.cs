@@ -2,7 +2,7 @@ public class BranchRTNode : BaseRTNode
 {
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        if (!TryGetInput<bool>("Condition", graph, out bool condition))
+        if (!TryGetInput<bool>("Condition", graph, out var condition))
         {
             SetFailed();
             return;

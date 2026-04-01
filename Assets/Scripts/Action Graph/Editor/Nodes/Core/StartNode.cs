@@ -8,6 +8,7 @@ public class StartNode : Node, IEditorNode
     protected override void OnDefinePorts(IPortDefinitionContext context)
     {
         context.AddOutputPort("Exec");
+        context.AddInputPort<bool>("Debug?");
     }
 
     public BaseRTNode CreateRuntimeType()

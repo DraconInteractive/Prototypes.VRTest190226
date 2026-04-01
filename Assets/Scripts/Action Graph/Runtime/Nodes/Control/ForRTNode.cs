@@ -8,7 +8,6 @@ public class ForRTNode : BaseLoopRTNode
     {
         if (!TryGetInput<int>("Count", graph, out var count))
         {
-            Debug.LogError("No count provided to for node");
             SetFailed();
             return;
         }
@@ -26,7 +25,7 @@ public class ForRTNode : BaseLoopRTNode
 
     private IEnumerator RunLoop(RuntimeActionGraph graph, int count, BaseRTNode firstLoopNode)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             foreach (var id in LoopBodyNodeIds)
                 graph.GetNodeById(id)?.Reset(graph);

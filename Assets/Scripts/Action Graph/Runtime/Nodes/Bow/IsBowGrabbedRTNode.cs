@@ -8,7 +8,6 @@ public class IsBowGrabbedRTNode : BaseRTNode
     {
         if (!TryGetInput("Bow", graph, out BowController bow))
         {
-            Debug.LogError("No bow input provided to IsGrabbed node");
             SetFailed();
             return;
         }

@@ -11,7 +11,6 @@ public class SpawnWaveRTNode : BaseContextRTNode
             var block = graph.GetNodeById(blockId);
             block.Execute(graph);
         }
-        // TODO: read block data (monster types, counts, spawn points) and trigger wave spawning
         DefExecNext(graph);
     }
 }
@@ -29,18 +28,16 @@ public class SpawnMonsterRTBlockNode : BaseBlockRTNode
     {
         if (!TryGetInput<int>("Count", graph, out var count))
         {
-            Debug.LogError("Failed to get # monsters to spawn");
             SetFailed();
             return;
         }
         
         if (!TryGetInput<MonsterType>("Prefab", graph, out var monsterType))
         {
-            Debug.LogError("Failed to get monster type to spawn");
             SetFailed();
             return;
         }
-        Debug.Log($"Spawning {count} {monsterType}s");
+        graph.PrintDebug(this, $"Spawning {count} {monsterType}s");
     }
 }
 
@@ -48,19 +45,12 @@ public class RewardBlockRTNode : BaseBlockRTNode
 {
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
-        if (!TryGetInput<int>("Gold", graph, out var g))
+        if (!TryGetInput<int>("Gold", graph, out var g) || !TryGetInput<int>("XP", graph, out var xp))
         {
-            Debug.LogError("Failed to get # gold to reward");
             SetFailed();
             return;
         }
-        if (!TryGetInput<int>("XP", graph, out var xp))
-        {
-            Debug.LogError("Failed to get # xp to reward");
-            SetFailed();
-            return;
-        }
-        
-        Debug.Log($"Awarding {g} gold and {xp} XP");
+
+        graph.PrintDebug(this,$"Awarding {g} gold and {xp} XP");
     }
 }

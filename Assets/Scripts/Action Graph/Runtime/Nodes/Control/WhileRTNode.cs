@@ -8,7 +8,6 @@ public class WhileRTNode : BaseLoopRTNode
     {
         if (!TryGetInput<bool>("Condition", graph, out bool initState))
         {
-            Debug.LogError("No condition provided to while node");
             SetFailed();
             return;
         }
@@ -39,7 +38,7 @@ public class WhileRTNode : BaseLoopRTNode
             // Update condition state
             if (!TryGetInput<bool>("Condition", graph, out state))
             {
-                Debug.LogError("No condition provided to while node");
+                graph.PrintDebugError(this, "Condition input failed during loop, ejecting");
                 SetFailed();
                 break;
             }
