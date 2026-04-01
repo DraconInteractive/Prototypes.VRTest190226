@@ -15,6 +15,78 @@ MonoBehaviour:
   SerializedGraph: "{\r\n  \"Nodes\": [\r\n    {\r\n      \"$type\": \"StartRTNode,
     Assembly-CSharp\",\r\n      \"NodeId\": \"0\",\r\n      \"Inputs\": [],\r\n     
     \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n          \"NodeId\":
-    \"0\",\r\n          \"Connections\": [],\r\n          \"TypeName\": null,\r\n         
+    \"0\",\r\n          \"Connections\": [\r\n            \"5__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n     
+    ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"FindBowRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"1\",\r\n      \"Inputs\": [],\r\n     
+    \"Outputs\": [\r\n        {\r\n          \"Name\": \"Bow\",\r\n          \"NodeId\":
+    \"1\",\r\n          \"Connections\": [\r\n            \"2__Bow\"\r\n         
+    ],\r\n          \"TypeName\": \"BowController, Assembly-CSharp, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\": null\r\n       
+    }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"IsBowGrabbedRTNode,
+    Assembly-CSharp\",\r\n      \"NodeId\": \"2\",\r\n      \"Inputs\": [\r\n       
+    {\r\n          \"Name\": \"Bow\",\r\n          \"NodeId\": \"2\",\r\n         
+    \"Connections\": [\r\n            \"1__Bow\"\r\n          ],\r\n          \"TypeName\":
+    \"BowController, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"IsGrabbed\",\r\n          \"NodeId\": \"2\",\r\n          \"Connections\":
+    [\r\n            \"4__In\"\r\n          ],\r\n          \"TypeName\": \"System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"WhileRTNode, Assembly-CSharp\",\r\n      \"LoopBodyNodeIds\":
+    [],\r\n      \"NodeId\": \"3\",\r\n      \"Inputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"3\",\r\n          \"Connections\":
+    [\r\n            \"7__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        },\r\n        {\r\n          \"Name\": \"Condition\",\r\n         
+    \"NodeId\": \"3\",\r\n          \"Connections\": [\r\n            \"4__Out\"\r\n         
+    ],\r\n          \"TypeName\": \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+    PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": null\r\n        }\r\n     
+    ],\r\n      \"Outputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"3\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
+    null,\r\n          \"Value\": null\r\n        },\r\n        {\r\n          \"Name\":
+    \"Loop\",\r\n          \"NodeId\": \"3\",\r\n          \"Connections\": [],\r\n         
+    \"TypeName\": null,\r\n          \"Value\": null\r\n        }\r\n      ],\r\n     
+    \"State\": 0\r\n    },\r\n    {\r\n      \"$type\": \"NotRTNode, Assembly-CSharp\",\r\n     
+    \"NodeId\": \"4\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\":
+    \"In\",\r\n          \"NodeId\": \"4\",\r\n          \"Connections\": [\r\n           
+    \"2__IsGrabbed\"\r\n          ],\r\n          \"TypeName\": \"System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Out\",\r\n          \"NodeId\": \"4\",\r\n          \"Connections\":
+    [\r\n            \"3__Condition\"\r\n          ],\r\n          \"TypeName\":
+    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
+    \"5\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"5\",\r\n          \"Connections\": [\r\n            \"0__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"5\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Lights
+    - In\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"5\",\r\n          \"Connections\":
+    [\r\n            \"6__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
+    \"6\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"6\",\r\n          \"Connections\": [\r\n            \"5__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"6\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Play
+    VO\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"6\",\r\n          \"Connections\":
+    [\r\n            \"7__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
+    \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    },\r\n   
+    {\r\n      \"$type\": \"TriggerRTNode, Assembly-CSharp\",\r\n      \"NodeId\":
+    \"7\",\r\n      \"Inputs\": [\r\n        {\r\n          \"Name\": \"Exec\",\r\n         
+    \"NodeId\": \"7\",\r\n          \"Connections\": [\r\n            \"6__Exec\"\r\n         
+    ],\r\n          \"TypeName\": null,\r\n          \"Value\": null\r\n        },\r\n       
+    {\r\n          \"Name\": \"Id\",\r\n          \"NodeId\": \"7\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"Grab
+    UI\"\r\n        }\r\n      ],\r\n      \"Outputs\": [\r\n        {\r\n         
+    \"Name\": \"Exec\",\r\n          \"NodeId\": \"7\",\r\n          \"Connections\":
+    [\r\n            \"3__Exec\"\r\n          ],\r\n          \"TypeName\": null,\r\n         
     \"Value\": null\r\n        }\r\n      ],\r\n      \"State\": 0\r\n    }\r\n 
     ]\r\n}"

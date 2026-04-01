@@ -13,8 +13,5 @@ public class ForNode : Node, IEditorNode
         context.AddOutputPort<int>("Element");
     }
 
-    public BaseRTNode CreateRuntimeType()
-    {
-        return new ForRTNode();
-    }
+    public BaseRTNode CreateRuntimeType() => new ForRTNode();
 }

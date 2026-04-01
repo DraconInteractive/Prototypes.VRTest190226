@@ -12,8 +12,5 @@ public class RunGraphNode : BaseActionNode, IEditorNode
         context.AddInputPort<bool>("Wait?").WithDefaultValue(true);
     }
 
-    public BaseRTNode CreateRuntimeType()
-    {
-        return new RunGraphRTNode();
-    }
+    public BaseRTNode CreateRuntimeType() => new RunGraphRTNode();
 }

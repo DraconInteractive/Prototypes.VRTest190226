@@ -35,6 +35,8 @@ public abstract class BaseRTNode
 
     public virtual void Reset(RuntimeActionGraph graph) => _state = NodeState.Idle;
 
+    public virtual bool IsPure() => false;
+    
     protected Port GetInputPort(string name) => Inputs.FirstOrDefault(x => x.Name == name);
     protected Port GetOutputPort(string name) => Outputs.FirstOrDefault(x => x.Name == name);
 
@@ -68,7 +70,7 @@ public abstract class BaseRTNode
                 return false;
             }
 
-            if (upstreamNode.State == NodeState.Idle)
+            if (upstreamNode.State == NodeState.Idle || IsPure()) // Re-execute pure nodes on every request
                 upstreamNode.Execute(graph);
 
             if (upstreamNode.State == NodeState.Failed)

@@ -10,8 +10,5 @@ public class DebugLogNode : BaseActionNode, IEditorNode
         context.AddInputPort<string>("Message");
     }
 
-    public BaseRTNode CreateRuntimeType()
-    {
-        return new DebugLogRTNode();
-    }
+    public BaseRTNode CreateRuntimeType() => new DebugLogRTNode();
 }

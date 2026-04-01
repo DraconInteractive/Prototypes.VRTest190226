@@ -13,8 +13,5 @@ public class ForeachNode : Node, IEditorNode
         context.AddOutputPort<object>("Element");
     }
 
-    public BaseRTNode CreateRuntimeType()
-    {
-        return new ForeachRTNode();
-    }
+    public BaseRTNode CreateRuntimeType() => new ForeachRTNode();
 }

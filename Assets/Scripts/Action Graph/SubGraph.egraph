@@ -31,9 +31,7 @@ MonoBehaviour:
         m_Name: 
         m_GraphNodeModels:
         - rid: 2920746497389887751
-        - rid: 2920746497389887753
-        m_GraphWireModels:
-        - rid: 2920746497389887754
+        m_GraphWireModels: []
         m_GraphStickyNoteModels: []
         m_GraphPlacematModels: []
         m_GraphVariableModels: []
@@ -43,10 +41,10 @@ MonoBehaviour:
         m_LocalSubgraphs: []
         m_LastKnownBounds:
           serializedVersion: 2
-          x: 156.66667
-          y: 185.33333
-          width: 432.6667
-          height: 118.66667
+          x: 157
+          y: 185
+          width: 121
+          height: 87
         m_GraphElementMetaData:
         - m_Guid:
             m_Value0: 4562197719945581515
@@ -55,22 +53,6 @@ MonoBehaviour:
             serializedVersion: 2
             Hash: cb13749ca72e503f9192d3a5e5817572
           m_Category: 0
-          m_Index: 0
-        - m_Guid:
-            m_Value0: 15743216497983183723
-            m_Value1: 3941834484843005826
-          m_HashGuid:
-            serializedVersion: 2
-            Hash: 6b5b5b68fe237bda82c773489435b436
-          m_Category: 0
-          m_Index: 1
-        - m_Guid:
-            m_Value0: 7116555883515970299
-            m_Value1: 2750231249809058973
-          m_HashGuid:
-            serializedVersion: 2
-            Hash: fb822ff5de15c3629d2c0c17c0c82a26
-          m_Category: 2
           m_Index: 0
         m_EntryPoint:
           rid: 2920746497389887751
@@ -127,79 +109,4 @@ MonoBehaviour:
           rid: 2920746497389887752
     - rid: 2920746497389887752
       type: {class: StartNode, ns: , asm: Assembly-CSharp-Editor}
-      data: 
-    - rid: 2920746497389887753
-      type: {class: UserNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
-      data:
-        m_Guid:
-          m_Value0: 15743216497983183723
-          m_Value1: 3941834484843005826
-        m_HashGuid:
-          serializedVersion: 2
-          Hash: 6b5b5b68fe237bda82c773489435b436
-        m_Version: 2
-        m_Position: {x: 345.3333, y: 191.84872}
-        m_Title: 
-        m_Tooltip: 
-        m_NodePreviewModel:
-          rid: -2
-        m_State: 0
-        m_InputConstantsById:
-          m_KeyList:
-          - Message
-          m_ValueList:
-          - rid: 2920746497389887755
-        m_InputPortInfos:
-          expandedPortsById:
-            m_KeyList: []
-            m_ValueList: 
-        m_OutputPortInfos:
-          expandedPortsById:
-            m_KeyList: []
-            m_ValueList: 
-        m_Collapsed: 0
-        m_CurrentModeIndex: 0
-        m_ElementColor:
-          m_Color: {r: 0, g: 0, b: 0, a: 0}
-          m_HasUserColor: 0
-        m_Node:
-          rid: 2920746497389887756
-    - rid: 2920746497389887754
-      type: {class: WireModel, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Guid:
-          m_Value0: 7116555883515970299
-          m_Value1: 2750231249809058973
-        m_HashGuid:
-          serializedVersion: 2
-          Hash: fb822ff5de15c3629d2c0c17c0c82a26
-        m_Version: 2
-        m_FromPortReference:
-          m_NodeModelGuid:
-            m_Value0: 4562197719945581515
-            m_Value1: 8247641115928531601
-          m_NodeModelHashGuid:
-            serializedVersion: 2
-            Hash: cb13749ca72e503f9192d3a5e5817572
-          m_UniqueId: Exec
-          m_PortDirection: 2
-          m_PortOrientation: 0
-          m_Title: Exec
-        m_ToPortReference:
-          m_NodeModelGuid:
-            m_Value0: 15743216497983183723
-            m_Value1: 3941834484843005826
-          m_NodeModelHashGuid:
-            serializedVersion: 2
-            Hash: 6b5b5b68fe237bda82c773489435b436
-          m_UniqueId: Exec
-          m_PortDirection: 1
-          m_PortOrientation: 0
-          m_Title: Exec
-    - rid: 2920746497389887755
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Executing sub node
-    - rid: 2920746497389887756
-      type: {class: DebugLogNode, ns: , asm: Assembly-CSharp-Editor}
       data: 
