@@ -68,17 +68,11 @@ MonoBehaviour:
     \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null\",\r\n          \"Value\": 1\r\n        },\r\n        {\r\n         
     \"Name\": \"Clip\",\r\n          \"NodeId\": \"5\",\r\n          \"Connections\":
-    [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
-    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
-    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
-    \"length\": 1.802449,\r\n            \"samples\": 79488,\r\n            \"channels\":
-    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
-    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
-    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
-    0,\r\n            \"name\": \"VO_WelcomeToTheVoid\",\r\n            \"hideFlags\":
-    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
-    \"NodeId\": \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+    PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"VO_WelcomeToTheVoid\"\r\n       
+    },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n          \"NodeId\":
+    \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\": \"System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
     \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
     \"NodeId\": \"5\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
     \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
@@ -153,17 +147,11 @@ MonoBehaviour:
     \"TypeName\": \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0,
     Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\": 1\r\n       
     },\r\n        {\r\n          \"Name\": \"Clip\",\r\n          \"NodeId\": \"11\",\r\n         
-    \"Connections\": [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
-    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
-    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
-    \"length\": 2.037551,\r\n            \"samples\": 89856,\r\n            \"channels\":
-    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
-    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
-    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
-    0,\r\n            \"name\": \"VO_YouHaveBeenSummoned\",\r\n            \"hideFlags\":
-    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
-    \"NodeId\": \"11\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    \"Connections\": [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0,
+    Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"VO_YouHaveBeenSummoned\"\r\n       
+    },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n          \"NodeId\":
+    \"11\",\r\n          \"Connections\": [],\r\n          \"TypeName\": \"System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
     \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
     \"NodeId\": \"11\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
     \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
@@ -180,17 +168,11 @@ MonoBehaviour:
     \"Audio.AudioController+VOSpeaker, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null\",\r\n          \"Value\": 1\r\n        },\r\n        {\r\n         
     \"Name\": \"Clip\",\r\n          \"NodeId\": \"12\",\r\n          \"Connections\":
-    [],\r\n          \"TypeName\": \"UnityEngine.AudioClip, UnityEngine.AudioModule,
-    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\",\r\n          \"Value\":
-    {\r\n            \"$type\": \"UnityEngine.AudioClip, UnityEngine.AudioModule\",\r\n           
-    \"length\": 5.25061226,\r\n            \"samples\": 231552,\r\n            \"channels\":
-    1,\r\n            \"frequency\": 44100,\r\n            \"isReadyToPlay\": false,\r\n           
-    \"loadType\": 0,\r\n            \"preloadAudioData\": false,\r\n            \"ambisonic\":
-    false,\r\n            \"loadInBackground\": false,\r\n            \"loadState\":
-    0,\r\n            \"name\": \"VO_WhyWhoKnows\",\r\n            \"hideFlags\":
-    8\r\n          }\r\n        },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n         
-    \"NodeId\": \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
-    \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
+    [],\r\n          \"TypeName\": \"System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+    PublicKeyToken=b77a5c561934e089\",\r\n          \"Value\": \"VO_WhyWhoKnows\"\r\n       
+    },\r\n        {\r\n          \"Name\": \"Clear Queue?\",\r\n          \"NodeId\":
+    \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\": \"System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         
     \"Value\": true\r\n        },\r\n        {\r\n          \"Name\": \"Wait?\",\r\n         
     \"NodeId\": \"12\",\r\n          \"Connections\": [],\r\n          \"TypeName\":
     \"System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\",\r\n         

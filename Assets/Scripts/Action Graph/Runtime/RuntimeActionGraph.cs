@@ -111,13 +111,13 @@ public class RuntimeActionGraph
 
     public void PrintDebug(BaseRTNode node, string message)
     {
-        if (!ShowDebug) return;
+        //if (!ShowDebug) return;
         Debug.Log($"[{node.GetType().FullName}]: {message}");
     }
 
     public void PrintDebugError(BaseRTNode node, string message)
     {
-        if (!ShowDebug) return;
+        //if (!ShowDebug) return;
         Debug.LogError($"[{node.GetType().FullName}]: {message}");
     }
 }

@@ -68,6 +68,7 @@ public abstract class BaseRTNode
 
             if (upstreamNode == null)
             {
+                graph.PrintDebugError(this, $"Cannot find upstream node for port {portName}");
                 value = default;
                 return false;
             }
@@ -83,16 +84,23 @@ public abstract class BaseRTNode
 
             if (upstreamPort.Value == null)
             {
+                graph.PrintDebugError(this, $"No value able to be fetched from upstream, port {portName}");
                 value = default;
                 return false;
             }
 
-            return TryConvertValue(upstreamPort.Value, portName, out value);
+            bool convertable = TryConvertValue(upstreamPort.Value, portName, out value);
+            if (!convertable)
+            {
+                graph.PrintDebugError(this, $"Cannot convert value for port {portName}");
+            }
+            return convertable;
         }
         else
         {
             if (inputPort.Value == null)
             {
+                graph.PrintDebugError(this, $"No value implicit on port {portName}, returning null");
                 value = default;
                 return true; // null is a valid unset default
             }

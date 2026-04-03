@@ -72,7 +72,7 @@ public class ActionGraphImporter : ScriptedImporter
             {
                 var newPort = new Port { Name = input.name, Type = input.dataType, NodeId = rt.NodeId };
                 if (!input.isConnected && input.TryGetValue(out object value))
-                    newPort.Value = value;
+                    AssignPortValue(newPort, value);
                 rt.Inputs.Add(newPort);
             }
 
@@ -80,7 +80,7 @@ public class ActionGraphImporter : ScriptedImporter
             {
                 var newPort = new Port { Name = output.name, Type = output.dataType, NodeId = rt.NodeId };
                 if (!output.isConnected && output.TryGetValue(out object value))
-                    newPort.Value = value;
+                    AssignPortValue(newPort, value);
                 rt.Outputs.Add(newPort);
             }
 
@@ -93,20 +93,14 @@ public class ActionGraphImporter : ScriptedImporter
                     {
                         var newPort = new Port { Name = input.name, Type = input.dataType, NodeId = blockRT.NodeId };
                         if (!input.isConnected && input.TryGetValue(out object value))
-                        {
-                            newPort.Value = value;
-                        }
-
+                            AssignPortValue(newPort, value);
                         blockRT.Inputs.Add(newPort);
                     }
                     foreach (var output in block.GetOutputPorts())
                     {
                         var newPort = new Port { Name = output.name, Type = output.dataType, NodeId = blockRT.NodeId };
                         if (!output.isConnected && output.TryGetValue(out object value))
-                        {
-                            newPort.Value = value;
-                        }
-
+                            AssignPortValue(newPort, value);
                         blockRT.Outputs.Add(newPort);
                     }
                 }
@@ -239,5 +233,20 @@ public class ActionGraphImporter : ScriptedImporter
             EditorUtility.SetDirty(registry);
         }
 
+    }
+
+    // Unity assets can't be serialized by Json.NET — store them as their asset name (string) instead.
+    // The runtime resolves the name back to the asset via a registry (e.g. AudioController.GetClip).
+    private static void AssignPortValue(Port port, object value)
+    {
+        if (value is UnityEngine.Object unityObj && AssetDatabase.Contains(unityObj))
+        {
+            port.Value = unityObj.name;
+            port.Type = typeof(string);
+        }
+        else
+        {
+            port.Value = value;
+        }
     }
 }

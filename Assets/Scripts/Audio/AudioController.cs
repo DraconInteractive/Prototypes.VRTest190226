@@ -104,7 +104,16 @@ namespace Audio
         }
 
         public List<DefaultSource> defaultSources = new();
-        
+        public List<AudioClip> clipRegistry = new();
+
+        public AudioClip GetClip(string clipName)
+        {
+            var clip = clipRegistry.FirstOrDefault(c => c != null && c.name == clipName);
+            if (clip == null)
+                Debug.LogError($"AudioController: no clip registered with name '{clipName}'.");
+            return clip;
+        }
+
         private Dictionary<string, List<VOState>> activeSpeakers = new();
         private List<string> speakerDeletionSet = new();
         
@@ -242,7 +251,7 @@ namespace Audio
             }
         }
         
-        public void AddVoiceOver(VOSpeaker speaker, AudioClip clip, string id = "", AudioSource source = null)
+        public VOState AddVoiceOver(VOSpeaker speaker, AudioClip clip, string id = "", AudioSource source = null, bool clearQueue = false)
         {
             var stateId = string.IsNullOrEmpty(id) ? speaker.ToString() : id;
 
@@ -259,7 +268,7 @@ namespace Audio
             if (stateSource == null)
             {
                 Debug.LogError($"No default VO source for speaker {speaker.ToString()}");
-                return;
+                return null;
             }
             
             var state = new VOState()
@@ -272,13 +281,28 @@ namespace Audio
 
             if (activeSpeakers.ContainsKey(stateId))
             {
-                activeSpeakers[stateId].Add(state);
+                if (clearQueue)
+                {
+                    foreach (var queueItem in activeSpeakers[stateId])
+                    {
+                        queueItem.OnCancel?.Invoke(stateId);
+                    }
+                    activeSpeakers[stateId].Clear();
+                    activeSpeakers[stateId].Add(state);
+                    state.Start();
+                }
+                else
+                {
+                    activeSpeakers[stateId].Add(state);
+                }
             }
             else
             {
                 activeSpeakers[stateId] = new List<VOState>() { state };
                 state.Start();
             }
+            
+            return state;
         }
     }
 }

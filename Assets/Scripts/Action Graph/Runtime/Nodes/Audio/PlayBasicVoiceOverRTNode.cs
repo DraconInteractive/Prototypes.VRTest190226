@@ -7,13 +7,16 @@ public class PlayBasicVoiceOverRTNode : BaseRTNode
     protected override void ExecuteInternal(RuntimeActionGraph graph)
     {
         if (!TryGetInput<AudioController.VOSpeaker>("Speaker", graph, out var speaker) ||
-            !TryGetInput<AudioClip>("Clip", graph, out var clip) ||
+            !TryGetInput<string>("Clip", graph, out var clipName) ||
             !TryGetInput<bool>("Clear Queue?", graph, out var clearQueue) ||
             !TryGetInput<bool>("Wait?", graph, out var wait))
         {
             SetFailed();
             return;
         }
+
+        var clip = AudioController.Instance.GetClip(clipName);
+        if (clip == null) { SetFailed(); return; }
 
         var state = AudioController.Instance.AddVoiceOver(speaker, clip, clearQueue: clearQueue);
         if (wait)
